@@ -1,0 +1,28 @@
+{
+  "name": "EqimPrj",
+  "description": "The best project ever.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/hongmomanu/EqimPrj",
+  "author": {
+    "name": "hongmomanu",
+    "email": "hongmomanu@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hongmomanu/EqimPrj.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hongmomanu/EqimPrj/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/hongmomanu/EqimPrj/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "index.html",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "keywords": []
+}
