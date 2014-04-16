@@ -18,7 +18,5 @@ Ext.application({
     autoCreateViewport: true,
     launch: function() {
 
-
-
     }
 });
