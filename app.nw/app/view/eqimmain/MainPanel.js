@@ -21,6 +21,7 @@ Ext.define('EqimPrj.view.eqimmain.MainPanel', {
                 {
                     xtype: 'splitbutton',
                     text: '菜单',
+                    hidden:true,
                     menu: [
                         {
                             text: '刷新',
@@ -39,13 +40,13 @@ Ext.define('EqimPrj.view.eqimmain.MainPanel', {
                 {
                     region: 'west',
                     split: true,
-                    width: 200,
                     title:'发震信息',
-                    minWidth: 175,
-                    maxWidth: 400,
+                    minWidth: 200,
+                    width:200,
+                    maxWidth: 300,
                     collapsible: true,
                     animCollapse: true,
-                    xtype:'panel'
+                    xtype:'earthlistgrid'
                 },
                 {
                     region: 'center',

@@ -20,9 +20,18 @@
       "url": "https://github.com/hongmomanu/EqimPrj/blob/master/LICENSE-MIT"
     }
   ],
+
   "main": "index.html",
   "engines": {
     "node": ">= 0.8.0"
   },
+    "window": {
+        "title": "Eqim地震报警",
+
+        "toolbar": false,
+
+        "position": "mouse"
+
+    },
   "keywords": []
 }
