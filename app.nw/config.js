@@ -1,9 +1,11 @@
 /**
- * Created by jack on 13-12-18.
+ * Created by jack on 14-04-18.
  */
 
-
-
+//启动窗口最大化
+var gui = require('nw.gui');
+var win = gui.Window.get();
+win.maximize();
 
 /*
 var os = require("os");

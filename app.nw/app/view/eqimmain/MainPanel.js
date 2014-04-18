@@ -16,8 +16,24 @@ Ext.define('EqimPrj.view.eqimmain.MainPanel', {
             defaults: {
                 labelAlign: 'top'
             },
+            tbar: [
 
-            // The fields
+                {
+                    xtype: 'splitbutton',
+                    text: '菜单',
+                    menu: [
+                        {
+                            text: '刷新',
+                            action: 'refresh'
+
+                        },{
+                            text: '新增',
+                            action: 'add'
+                        }
+                    ]
+                }
+            ],
+                    // The fields
 
             items:[
                 {
