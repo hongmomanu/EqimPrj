@@ -21,19 +21,21 @@ Ext.define('EqimPrj.view.eqimmain.MainPanel', {
                 {
                     xtype: 'splitbutton',
                     text: '菜单',
-                    hidden:true,
                     menu: [
                         {
-                            text: '刷新',
-                            action: 'refresh'
-
-                        },{
-                            text: '新增',
-                            action: 'add'
+                            text: '服务设置',
+                            action: 'configwin'
+                        },
+                        {
+                            text:'刷新',
+                            action:'refresh'
+                        },
+                        {
+                            text:'关闭',
+                            action:'close'
                         }
                     ]
-                }
-            ],
+                }],
                     // The fields
 
             items:[

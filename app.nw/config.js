@@ -7,6 +7,22 @@ var gui = require('nw.gui');
 var win = gui.Window.get();
 win.maximize();
 
+
+win.on('close', function() {
+    //this.hide(); // Pretend to be closed already
+    //console.log("We're closing...");
+    var me=this;
+    Ext.MessageBox.confirm('提示', '你确定关闭程序么?', function(btn){
+        if(btn=="yes"){
+          me.close(true);
+        }else{
+          //this.close(false);
+        }
+    });
+
+    //this.close(true);
+});
+
 /*
 var os = require("os");
 var c = require('child_process');

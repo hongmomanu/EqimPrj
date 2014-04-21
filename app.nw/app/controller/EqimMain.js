@@ -30,10 +30,31 @@ Ext.define('EqimPrj.controller.EqimMain', {
             },
             'earthlistgrid':{
                 itemclick: this.showMap
+            },
+            'mainpanel menuitem[action=configwin]':{
+                click: this.showServerWin
+            },
+            'mainpanel menuitem[action=refresh]':{
+                click: this.refreshwin
+            },
+            'mainpanel menuitem[action=close]':{
+                click: this.closewin
             }
 
         });
 
+    },
+    closewin:function(btn){
+        Ext.MessageBox.confirm('提示', '你确定关闭程序么?', function(btn){
+            if(btn=="yes"){
+                win.close(true);
+            }else{
+                //this.close(false);
+            }
+        });
+    },
+    refreshwin:function(btn){
+      window.location.reload();
     },
     showMap:function(grid, record){
        this.showMaplocation(record.data);
@@ -42,9 +63,26 @@ Ext.define('EqimPrj.controller.EqimMain', {
         this.map.panTo(new L.LatLng(data.lat,data.lon));
         if(this.popupmarker)this.map.removeLayer(this.popupmarker);
         var marker=L.marker([data.lat,data.lon]).addTo(this.map)
-            .bindPopup("<b>你好!</b><br />地震中心.").openPopup();
+            .bindPopup("<ul><li>发震时刻:"+data.time+"</li><li>地名:"
+                +data.location+"</li><li>深度:"+data.depth+"</li></ul>").openPopup();
         this.popupmarker=marker;
 
+    },
+    showServerWin:function(btn){
+        Ext.MessageBox.show({
+            title: '服务地址',
+            msg: '服务地址:',
+            width:300,
+            buttons: Ext.MessageBox.OKCANCEL,
+            multiline: true,
+            value:localStorage.serverurl?localStorage.serverurl:"localhost:3001",
+            fn: function (btn,text){
+                if(btn==="ok"){
+                    localStorage.serverurl=text;
+                }
+
+            }
+        });
     },
     afterlayout:function(panel){
         if(this.map)this.map.invalidateSize(true);
@@ -54,11 +92,11 @@ Ext.define('EqimPrj.controller.EqimMain', {
     gridwebsocket:function(panel){
        var grid=panel.down('grid');
        var store=grid.getStore();
-       testobj=store;
-       var socket = new WebSocket("ws://localhost:3001/");
+       var url=localStorage.serverurl;
+       url=url?"ws://"+url+"/":"ws://localhost:3001/";
+       var socket = new WebSocket(url);
        var me=this;
        socket.onmessage = function(event) {
-           //console.log("ok");
            var data=event.data;
            data=JSON.parse(data);
            store.add(data);

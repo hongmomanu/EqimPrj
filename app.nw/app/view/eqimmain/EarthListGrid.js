@@ -19,13 +19,16 @@ Ext.define('EqimPrj.view.eqimmain.EarthListGrid', {
                 scrollToTop: Ext.emptyFn,
                 enableTextSelection:true
             },
+
             columns: [
                 {header: '详细信息',dataIndex: 'location',flex: 1,renderer : function(v,m,r) {
-                    var str='<ul><li>地名:'+ r.get('location')+'</li><li>深度:'+ r.get('depth')+
-                        '</li><li>震级类型:'+ r.get('Ml')+'</li><li>震级:'+ r.get('M')+'</li>' +
-                        '<li>经纬度:'+ r.get('lon')+','+ r.get('lat')+'</li><li>发震时刻:'+
-                        r.get('time')
-                        +'</li><li>信息类型:'+ r.get('infotype')+'</li></ul>';
+                    var str='<ul><li>台站:'+ r.get('cname')+'</li><li>发震时刻:'
+                        +r.get('time')+'</li>' +
+                        '<li>经纬度:'+ r.get('lon').toFixed(3)+','+ r.get('lat').toFixed(3)+'</li>' +
+                        '<li>震级:M '+ (r.get('M')==null?"无":r.get('M'))+',Ml '
+                        +(r.get('Ml')==null?"无":r.get('Ml'))+',Ms '+ (r.get('Ms')==null?"无":r.get('Ms'))+
+                        '</li><li>深度:'+ r.get('depth')+'km</li>'+
+                        '<li>地名:'+ r.get('location')+'</li></ul>';
                     return str;
                 }}
             ],
@@ -37,9 +40,9 @@ Ext.define('EqimPrj.view.eqimmain.EarthListGrid', {
                     {name: 'location',
                         type: 'string'},
                     {name:'lat',
-                        type: 'string'},
+                        type: 'float'},
                     {name:'lon',
-                        type: 'string'},
+                        type: 'float'},
                     {name:'depth',
                         type: 'string'},
                     {name:'eqtype',
@@ -49,6 +52,10 @@ Ext.define('EqimPrj.view.eqimmain.EarthListGrid', {
                     {name:'Ml',
                         type: 'string'},
                     {name:'Ms',
+                        type: 'string'},
+                    {name:'cname',
+                        type: 'string'},
+                    {name:'sname',
                         type: 'string'},
                     {name:'time',
                         type: 'string'},
