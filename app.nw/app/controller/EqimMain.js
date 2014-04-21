@@ -40,8 +40,11 @@ Ext.define('EqimPrj.controller.EqimMain', {
     },
     showMaplocation:function(data){
         this.map.panTo(new L.LatLng(data.lat,data.lon));
-        L.marker([data.lat,data.lon]).addTo(this.map)
+        if(this.popupmarker)this.map.removeLayer(this.popupmarker);
+        var marker=L.marker([data.lat,data.lon]).addTo(this.map)
             .bindPopup("<b>你好!</b><br />地震中心.").openPopup();
+        this.popupmarker=marker;
+
     },
     afterlayout:function(panel){
         if(this.map)this.map.invalidateSize(true);
@@ -51,10 +54,15 @@ Ext.define('EqimPrj.controller.EqimMain', {
     gridwebsocket:function(panel){
        var grid=panel.down('grid');
        var store=grid.getStore();
-       var socket = new WebSocket("ws://localhost:3001/")
+       testobj=store;
+       var socket = new WebSocket("ws://localhost:3001/");
+       var me=this;
        socket.onmessage = function(event) {
-           //console.log()
-           store.add(event.data);
+           //console.log("ok");
+           var data=event.data;
+           data=JSON.parse(data);
+           store.add(data);
+           me.showMaplocation(data);
        }
 
 
@@ -65,7 +73,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
         var d = new Ext.util.DelayedTask(function(){
             //console.log($('#map').height());
             //console.log($('#map').width());
-            me.map = L.map('map').setView([30.274089,120.15506900000003], 13);
+            me.map = L.map('map').setView([30.274089,120.15506900000003], 11);
             var map=me.map;
             L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
