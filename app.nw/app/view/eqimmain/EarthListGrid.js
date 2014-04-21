@@ -20,21 +20,46 @@ Ext.define('EqimPrj.view.eqimmain.EarthListGrid', {
                 enableTextSelection:true
             },
             columns: [
-                {header: '详细信息',dataIndex: 'content',flex: 1}
+                {header: '详细信息',dataIndex: 'location',flex: 1,renderer : function(v,m,r) {
+                    var str='<ul><li>地名:'+ r.get('location')+'</li><li>深度:'+ r.get('depth')+
+                        '</li><li>震级类型:'+ r.get('eqtype')+'</li><li>震级:'+ r.get('eqlevel')+'</li>' +
+                        '<li>经纬度:'+ r.get('lon')+','+ r.get('lat')+'</li><li>发震时刻:'+
+                        r.get('time')
+                        +'</li><li>信息类型:'+ r.get('infotype')+'</li></ul>';
+                    return str;
+                }}
             ],
 
             store: Ext.create('Ext.data.Store', {
                 //alias: 'store.ModeStore',
                 autoLoad: false,
-                fields: [{
-                    name: 'content',
-                    type: 'string'
-                }],
+                fields: [
+                    {name: 'location',
+                        type: 'string'},
+                    {name:'lat',
+                        type: 'string'},
+                    {name:'lon',
+                        type: 'string'},
+                    {name:'depth',
+                        type: 'string'},
+                    {name:'eqtype',
+                        type: 'string'},
+                    {name:'eqlevel',
+                        type: 'string'},
+                    {name:'time',
+                        type: 'string'},
+                    {name:'infotype',
+                        type: 'string'}
+                ],
                 data: [{
-                    content: '<ul><li>地名:杭州</li><li>深度:10km</li><li>震级类型:ML</li><li>震级:M</li>' +
-                        '<li>经纬度:120.158,30.294</li><li>发震时刻:2014-12-20 14:00:22</li><li>信息类型:CC</li></ul>'
-                        ,
-                    id: 1
+                    location :"杭州",
+                    lat :30.294,
+                    lon:120.158,
+                    depth:"10km",
+                    eqtype:"ML",
+                    eqlevel:'M',
+                    time:'2014-12-20 14:00:22',
+                    infotype:'CC'
                 }]
             })
 

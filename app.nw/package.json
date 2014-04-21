@@ -28,7 +28,7 @@
     "window": {
         "title": "Eqim地震报警",
 
-        "toolbar": false,
+        "toolbar": true,
 
         "position": "mouse"
 

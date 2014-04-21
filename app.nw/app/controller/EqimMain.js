@@ -27,16 +27,40 @@ Ext.define('EqimPrj.controller.EqimMain', {
             'mainpanel':{
                 afterrender: this.layoutfunc,
                 afterlayout:this.afterlayout
+            },
+            'earthlistgrid':{
+                itemclick: this.showMap
             }
 
         });
 
     },
+    showMap:function(grid, record){
+       this.showMaplocation(record.data);
+    },
+    showMaplocation:function(data){
+        this.map.panTo(new L.LatLng(data.lat,data.lon));
+        L.marker([data.lat,data.lon]).addTo(this.map)
+            .bindPopup("<b>你好!</b><br />地震中心.").openPopup();
+    },
     afterlayout:function(panel){
         if(this.map)this.map.invalidateSize(true);
 
     },
+
+    gridwebsocket:function(panel){
+       var grid=panel.down('grid');
+       var store=grid.getStore();
+       var socket = new WebSocket("ws://localhost:3001/")
+       socket.onmessage = function(event) {
+           //console.log()
+           store.add(event.data);
+       }
+
+
+    },
     layoutfunc:function(panel){
+       this.gridwebsocket(panel);
        var me=this;
         var d = new Ext.util.DelayedTask(function(){
             //console.log($('#map').height());
@@ -48,10 +72,10 @@ Ext.define('EqimPrj.controller.EqimMain', {
             }).addTo(map);
 
 
-            L.marker([ 30.274089,120.15506900000003]).addTo(map)
-                .bindPopup("<b>你好!</b><br />地震中心.").openPopup();
+            /*L.marker([ 30.274089,120.15506900000003]).addTo(map)
+                .bindPopup("<b>你好!</b><br />地震中心.").openPopup();*/
 
-            L.circle([ 30.294089,120.15806900000003], 500, {
+            /*L.circle([ 30.294089,120.15806900000003], 500, {
                 color: 'red',
                 fillColor: '#f03',
                 fillOpacity: 0.5
@@ -62,7 +86,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
                 [30.284089,120.15806900000003],
                 [30.270089,120.15406900000003]
             ]).addTo(map).bindPopup("多边形测试.");
-
+*/
 
             var popup = L.popup();
 
