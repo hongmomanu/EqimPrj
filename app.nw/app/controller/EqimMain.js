@@ -64,7 +64,9 @@ Ext.define('EqimPrj.controller.EqimMain', {
         if(this.popupmarker)this.map.removeLayer(this.popupmarker);
         var marker=L.marker([data.lat,data.lon]).addTo(this.map)
             .bindPopup("<ul><li>发震时刻:"+data.time+"</li><li>地名:"
-                +data.location+"</li><li>深度:"+data.depth+"</li></ul>").openPopup();
+                +data.location+"</li><li>震级:M"+ data.M+', Ml'
+            +data.Ml+', Ms'+ data.Ms+
+        "</li><li>深度:"+data.depth+"km</li></ul>").openPopup();
         this.popupmarker=marker;
 
     },
@@ -101,6 +103,11 @@ Ext.define('EqimPrj.controller.EqimMain', {
            data=JSON.parse(data);
            store.add(data);
            me.showMaplocation(data);
+
+           var resoreceurl="http://"+localStorage.serverurl.split(":")[0]+":3000/audio/eqim.mp3";
+           var play=new Audio(resoreceurl);
+           play.play();
+
        }
 
 

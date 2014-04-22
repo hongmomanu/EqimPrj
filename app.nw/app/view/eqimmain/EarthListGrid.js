@@ -22,11 +22,11 @@ Ext.define('EqimPrj.view.eqimmain.EarthListGrid', {
 
             columns: [
                 {header: '详细信息',dataIndex: 'location',flex: 1,renderer : function(v,m,r) {
-                    var str='<ul><li>台站:'+ r.get('cname')+'</li><li>发震时刻:'
+                    var str='<ul><li>来源:'+ r.get('cname')+'</li><li>发震时刻:'
                         +r.get('time')+'</li>' +
                         '<li>经纬度:'+ r.get('lon').toFixed(3)+','+ r.get('lat').toFixed(3)+'</li>' +
-                        '<li>震级:M '+ (r.get('M')==null?"无":r.get('M'))+',Ml '
-                        +(r.get('Ml')==null?"无":r.get('Ml'))+',Ms '+ (r.get('Ms')==null?"无":r.get('Ms'))+
+                        '<li>震级:M'+ (r.get('M')==null?"无":r.get('M'))+', Ml'
+                        +(r.get('Ml')==null?"无":r.get('Ml'))+', Ms '+ (r.get('Ms')==null?"无":r.get('Ms'))+
                         '</li><li>深度:'+ r.get('depth')+'km</li>'+
                         '<li>地名:'+ r.get('location')+'</li></ul>';
                     return str;

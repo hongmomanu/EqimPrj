@@ -8,6 +8,7 @@ var win = gui.Window.get();
 win.maximize();
 
 
+
 win.on('close', function() {
     //this.hide(); // Pretend to be closed already
     //console.log("We're closing...");
