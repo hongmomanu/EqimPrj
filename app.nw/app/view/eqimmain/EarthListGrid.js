@@ -59,7 +59,7 @@ Ext.define('EqimPrj.view.eqimmain.EarthListGrid', {
                         type: 'string'},
                     {name:'time',
                         type: 'string'},
-                    {name:'infotype',
+                    {name:'type',
                         type: 'string'}
                 ],
                 data: [

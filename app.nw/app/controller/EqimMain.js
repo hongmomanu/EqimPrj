@@ -77,7 +77,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
             width:300,
             buttons: Ext.MessageBox.OKCANCEL,
             multiline: true,
-            value:localStorage.serverurl?localStorage.serverurl:"localhost:3001",
+            value:localStorage.serverurl?localStorage.serverurl:"http://localhost:3000/",
             fn: function (btn,text){
                 if(btn==="ok"){
                     localStorage.serverurl=text;
@@ -95,18 +95,27 @@ Ext.define('EqimPrj.controller.EqimMain', {
        var grid=panel.down('grid');
        var store=grid.getStore();
        var url=localStorage.serverurl;
-       url=url?"ws://"+url+"/":"ws://localhost:3001/";
+        url=url?"http://localhost:8080/lumprj/":url;
+        /*url=url?"ws://"+url+"/":"ws://localhost:3001/";*/
+        if(url.indexOf("http")<0){
+            url="http://"+url;
+        }
+       url=url.replace(/(:\d+)/g,":3001");
+       url=url.replace("http","ws");
+
        var socket = new WebSocket(url);
        var me=this;
        socket.onmessage = function(event) {
            var data=event.data;
            data=JSON.parse(data);
-           store.add(data);
-           me.showMaplocation(data);
+           if(data.type==="eqim"){
+               store.add(data);
+               me.showMaplocation(data);
+               var resoreceurl=localStorage.serverurl+"audio/eqim.mp3";
+               var play=new Audio(resoreceurl);
+               play.play();
+           }
 
-           var resoreceurl="http://"+localStorage.serverurl.split(":")[0]+":3000/audio/eqim.mp3";
-           var play=new Audio(resoreceurl);
-           play.play();
 
        }
 
