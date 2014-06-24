@@ -25,8 +25,9 @@
     "node": ">= 0.8.0"
   },
   "devDependencies": {
-      "grunt-contrib-watch": "~0.2.0",
-      "grunt-node-webkit-builder": "~0.1.13"
+    "grunt-contrib-watch": "~0.2.0",
+    "grunt-node-webkit-builder": "~0.1.13",
+    "grunt-contrib-copy": "^0.5.0"
   },
   "keywords": []
 }

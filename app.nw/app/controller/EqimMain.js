@@ -95,7 +95,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
        var grid=panel.down('grid');
        var store=grid.getStore();
        var url=localStorage.serverurl;
-        url=url?"http://localhost:8080/lumprj/":url;
+        url=url?url:"http://localhost:8080/lumprj/";
         /*url=url?"ws://"+url+"/":"ws://localhost:3001/";*/
         if(url.indexOf("http")<0){
             url="http://"+url;
@@ -133,6 +133,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
+            L.Control.measureControl().addTo(map);
 
             /*L.marker([ 30.274089,120.15506900000003]).addTo(map)
                 .bindPopup("<b>你好!</b><br />地震中心.").openPopup();*/

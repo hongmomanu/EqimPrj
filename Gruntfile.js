@@ -25,9 +25,10 @@ module.exports = function (grunt) {
     // These plugins provide necessary tasks.
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-node-webkit-builder');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
     // Default task.
-    grunt.registerTask('default', ['watch']);
+    grunt.registerTask('default', ['watch', 'copy']);
 
     grunt.registerTask('run', 'Run node-webkit app', function () {
         exec('nw app.nw');
