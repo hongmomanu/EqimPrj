@@ -27,9 +27,8 @@
   },
     "window": {
         "title": "浙江台网实时地震信息接收系统",
-
-        "toolbar": false,
-
+        "icon": "layers.png",
+        "toolbar": true,
         "position": "mouse"
 
     },

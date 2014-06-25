@@ -127,12 +127,34 @@ Ext.define('EqimPrj.controller.EqimMain', {
         var d = new Ext.util.DelayedTask(function(){
             //console.log($('#map').height());
             //console.log($('#map').width());
-            me.map = L.map('map').setView([30.274089,120.15506900000003], 11);
-            var map=me.map;
-            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
 
+
+            var osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                attribution: 'Map &copy; Pacific Rim Coordination Center (PRCC).  Certain data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+
+            });
+            var baseLayer = L.tileLayer('http://{s}.tiles.mapbox.com/v3/openplans.map-g4j0dszr/{z}/{x}/{y}.png', {
+                attribution: 'Map &copy; Pacific Rim Coordination Center (PRCC).  Certain data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+
+            });
+            var  ter = L.tileLayer("http://t0.tianditu.cn/ter_w/wmts?" +
+                "SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ter&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" +
+                "&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}", {
+                minZoom: 4,
+                maxZoom: 18
+            });
+            var baseMaps = {
+                'OSM底图':osmLayer,
+                "Mapbox": baseLayer,
+                '天地图地形':ter
+            };
+            me.map = new L.Map('map', {center: [30.274089,120.15506900000003], zoom: 8, layers: [osmLayer]});
+            var map=me.map;
+            /*L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);*/
+            var layersControl = new L.Control.Layers(baseMaps);
+            map.addControl(layersControl);
             L.Control.measureControl().addTo(map);
 
             /*L.marker([ 30.274089,120.15506900000003]).addTo(map)
