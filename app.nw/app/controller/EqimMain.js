@@ -37,6 +37,9 @@ Ext.define('EqimPrj.controller.EqimMain', {
             'mainpanel menuitem[action=closevoice]':{
                 click: this.closevoice
             },
+            'mainpanel image': {
+                voiceclick: this.voiceclick
+            },
             'mainpanel menuitem[action=refresh]':{
                 click: this.refreshwin
             },
@@ -74,7 +77,19 @@ Ext.define('EqimPrj.controller.EqimMain', {
         this.popupmarker=marker;
 
     },
+    voiceclick:function(btn){
+        testobj=btn;
+        if(this.closevoice_state){
+            this.closevoice_state=false;
+            btn.setSrc(localStorage.serverurl+'images/mute.png');
+        }
+        else {
+            this.closevoice_state=true;
+            btn.setSrc(localStorage.serverurl+'images/sound.png');
+        }
+    },
     closevoice:function(btn){
+
       if(this.closevoice_state)this.closevoice_state=false;
        else this.closevoice_state=true;
     },
@@ -156,17 +171,35 @@ Ext.define('EqimPrj.controller.EqimMain', {
                 minZoom: 4,
                 maxZoom: 18
             });
+
+            var tdt = L.tileLayer("http://t0.tianditu.cn/vec_w/wmts?" +
+                "SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" +
+                "&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}", {
+                minZoom: 4,
+                maxZoom: 18
+            });
+
+            var lt2 = L.tileLayer("http://t0.tianditu.com/cva_w/wmts?" +
+                "SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" +
+                "&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}", {
+                minZoom: 4,
+                maxZoom: 18
+            });
             var baseMaps = {
                 'OSM底图':osmLayer,
+                '天地图底图':tdt,
                 "Mapbox": baseLayer,
                 '天地图地形':ter
+            };
+            var overlayMaps = {
+                "标注": lt2
             };
             me.map = new L.Map('map', {center: [30.274089,120.15506900000003], zoom: 8, layers: [osmLayer]});
             var map=me.map;
             /*L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);*/
-            var layersControl = new L.Control.Layers(baseMaps);
+            var layersControl = new L.Control.Layers(baseMaps,overlayMaps);
             map.addControl(layersControl);
             L.Control.measureControl().addTo(map);
 
@@ -210,7 +243,8 @@ Ext.define('EqimPrj.controller.EqimMain', {
                     var url=localStorage.serverurl;
                     var LeafIcon = L.Icon.extend({
                         options: {
-                            shadowUrl:(url+"images/shadow.jpg")
+                            shadowUrl:(url+"images/shadow.jpg"),
+                            popupAnchor:  [8, 0]
                         }
                     });
                     var greenIcon = new LeafIcon({iconUrl: url+"images/green.jpg"});

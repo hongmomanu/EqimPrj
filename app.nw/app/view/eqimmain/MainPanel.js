@@ -32,6 +32,7 @@ Ext.define('EqimPrj.view.eqimmain.MainPanel', {
                         },
                         {
                             text:'开关声音',
+                            hidden:true,
                             action:'closevoice'
                         },
                         {
@@ -39,7 +40,28 @@ Ext.define('EqimPrj.view.eqimmain.MainPanel', {
                             action:'close'
                         }
                     ]
-                }],
+                },
+
+                {
+                    xtype: 'image' ,
+                    src:localStorage.serverurl+'images/sound.png',
+                    height:20,
+                    overCls:'overhand',
+                    listeners: {
+
+                        render: function(cmp) {
+                           /* Ext.create('Ext.tip.ToolTip', {
+                                target: cmp.el,
+                                html: "<b>刷新</b><br> "
+                            });*/
+
+                            cmp.getEl().on('click', function(){ this.fireEvent('voiceclick', cmp); }, cmp);
+                        }
+                    }
+
+                }
+
+            ],
                     // The fields
 
             items:[
