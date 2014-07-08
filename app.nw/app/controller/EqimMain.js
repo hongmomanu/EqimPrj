@@ -34,6 +34,9 @@ Ext.define('EqimPrj.controller.EqimMain', {
             'mainpanel menuitem[action=configwin]':{
                 click: this.showServerWin
             },
+            'mainpanel menuitem[action=closevoice]':{
+                click: this.closevoice
+            },
             'mainpanel menuitem[action=refresh]':{
                 click: this.refreshwin
             },
@@ -44,6 +47,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
         });
 
     },
+    closevoice_state:true,
     closewin:function(btn){
         Ext.MessageBox.confirm('提示', '你确定关闭程序么?', function(btn){
             if(btn=="yes"){
@@ -69,6 +73,10 @@ Ext.define('EqimPrj.controller.EqimMain', {
         "</li><li>深度:"+data.depth+"km</li></ul>").openPopup();
         this.popupmarker=marker;
 
+    },
+    closevoice:function(btn){
+      if(this.closevoice_state)this.closevoice_state=false;
+       else this.closevoice_state=true;
     },
     showServerWin:function(btn){
         Ext.MessageBox.show({
@@ -109,11 +117,16 @@ Ext.define('EqimPrj.controller.EqimMain', {
            var data=event.data;
            data=JSON.parse(data);
            if(data.type==="eqim"){
-               store.add(data);
-               me.showMaplocation(data);
-               var resoreceurl=localStorage.serverurl+"audio/eqim.mp3";
-               var play=new Audio(resoreceurl);
-               play.play();
+               //console.log(data);
+               if(data['location'].indexOf('测试')<0){
+                   store.add(data);
+                   me.showMaplocation(data);
+                   var resoreceurl=localStorage.serverurl+"audio/eqim.wav";
+                   var play=new Audio(resoreceurl);
+                   if(me.closevoice_state)play.play();
+
+               }
+
            }
 
 
@@ -130,7 +143,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
 
 
             var osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-                attribution: 'Map &copy; Pacific Rim Coordination Center (PRCC).  Certain data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+                attribution: 'Map &copy; Pacific Rim Coordination Center (PRCC).  Certain data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
 
             });
             var baseLayer = L.tileLayer('http://{s}.tiles.mapbox.com/v3/openplans.map-g4j0dszr/{z}/{x}/{y}.png', {
@@ -156,6 +169,67 @@ Ext.define('EqimPrj.controller.EqimMain', {
             var layersControl = new L.Control.Layers(baseMaps);
             map.addControl(layersControl);
             L.Control.measureControl().addTo(map);
+
+            var NewControl = L.Control.extend({
+                options: {
+                    position: 'bottomleft'
+                },
+
+                onAdd: function (map) {
+                    this._map = map;
+
+                    var className = 'leaflet-hax',
+                        container = L.DomUtil.create('div', className);
+                    container.innerHTML = '<input class="span2" type="text" id="quickpanto" style="width: 120px;" value="30.274,120.155" />';
+
+
+                    //if (!L.Browser.touch) {
+                    //    alert('1');
+                    L.DomEvent.disableClickPropagation(container);
+                    //} else {
+                    //    alert('2');
+                    //    L.DomEvent.addListener(container, 'click', L.DomEvent.stopPropagation);
+                    //}
+
+                    return container;
+                }
+            });
+
+            map.addControl(new NewControl());
+            map.on('moveend', function(){
+                var center = (map.getCenter());
+                $('#quickpanto').val(center.lat.toFixed(3)+","+center.lng.toFixed(3));
+
+            });
+
+            $('#quickpanto').keyup(function(e){
+                if(e.keyCode == 13)
+                {
+                    var lonlat=$('#quickpanto').val();
+                    map.panTo([lonlat.split(",")[0],lonlat.split(",")[1]]);
+                    var url=localStorage.serverurl;
+                    var LeafIcon = L.Icon.extend({
+                        options: {
+                            shadowUrl:(url+"images/shadow.jpg")
+                        }
+                    });
+                    var greenIcon = new LeafIcon({iconUrl: url+"images/green.jpg"});
+                    var marker=L.marker([lonlat.split(",")[0],lonlat.split(",")[1]],{icon: greenIcon}).addTo(map)
+                        .bindPopup('当前的位置 ' +lonlat+'<br> ')
+                        .openPopup();
+
+                    marker.on('popupclose', function(e) {
+                        //alert(1);
+                        try{
+                            map.removeLayer(marker);
+                        }catch(err) {
+
+                        }
+
+                    });
+                }
+            });
+
 
             /*L.marker([ 30.274089,120.15506900000003]).addTo(map)
                 .bindPopup("<b>你好!</b><br />地震中心.").openPopup();*/

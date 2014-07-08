@@ -7,6 +7,8 @@ var gui = require('nw.gui');
 var win = gui.Window.get();
 win.maximize();
 
+//var tray = new gui.Tray({ title: 'Tray', icon: 'app.png' });
+
 
 
 win.on('close', function() {
@@ -23,6 +25,8 @@ win.on('close', function() {
 
     //this.close(true);
 });
+
+if(!localStorage.serverurl)localStorage.serverurl="http://10.33.5.242:8080/lumprj/"
 
 /*
 var os = require("os");

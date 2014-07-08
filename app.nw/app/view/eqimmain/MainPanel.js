@@ -31,6 +31,10 @@ Ext.define('EqimPrj.view.eqimmain.MainPanel', {
                             action:'refresh'
                         },
                         {
+                            text:'开关声音',
+                            action:'closevoice'
+                        },
+                        {
                             text:'关闭',
                             action:'close'
                         }

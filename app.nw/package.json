@@ -1,6 +1,6 @@
 {
-  "name": "EqimPrj",
-  "description": "The best project ever.",
+  "name": "EqEAR",
+  "description": "地震信息接收平台.",
   "version": "0.1.0",
   "homepage": "https://github.com/hongmomanu/EqimPrj",
   "author": {
@@ -26,9 +26,9 @@
     "node": ">= 0.8.0"
   },
     "window": {
-        "title": "浙江台网实时地震信息接收系统",
-        "icon": "layers.png",
-        "toolbar": true,
+        "title": "地震信息接收平台",
+        "icon": "app.png",
+        "toolbar": false,
         "position": "mouse"
 
     },
