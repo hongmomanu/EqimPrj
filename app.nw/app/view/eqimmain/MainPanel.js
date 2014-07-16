@@ -59,6 +59,15 @@ Ext.define('EqimPrj.view.eqimmain.MainPanel', {
                         }
                     }
 
+                },
+
+                '-',
+                {
+                    xtype: 'text',
+                    width:250,
+                    itemId:'connectinfo',
+                    text: '无连接'
+
                 }
 
             ],

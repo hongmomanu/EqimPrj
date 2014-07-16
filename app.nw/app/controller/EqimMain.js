@@ -81,6 +81,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
         testobj=btn;
         if(this.closevoice_state){
             this.closevoice_state=false;
+            if(this.audioplay)this.audioplay.pause();
             btn.setSrc(localStorage.serverurl+'images/mute.png');
         }
         else {
@@ -115,6 +116,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
     },
 
     gridwebsocket:function(panel){
+        var me=this;
        var grid=panel.down('grid');
        var store=grid.getStore();
        var url=localStorage.serverurl;
@@ -138,6 +140,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
                    me.showMaplocation(data);
                    var resoreceurl=localStorage.serverurl+"audio/eqim.wav";
                    var play=new Audio(resoreceurl);
+                   me.audioplay=play;
                    if(me.closevoice_state)play.play();
 
                }
@@ -145,7 +148,23 @@ Ext.define('EqimPrj.controller.EqimMain', {
            }
 
 
-       }
+       };
+
+        socket.onclose = function(event) {
+            panel.down('#connectinfo').update('<font color="red">连接断开，正在尝试建立连接。。。</font>');
+
+            var d = new Ext.util.DelayedTask(function(){
+                me.gridwebsocket(panel);
+            });
+            d.delay(5000);
+
+        };
+
+        socket.onopen = function(event) {
+            panel.down('#connectinfo').update('<font color="green">连接正常!</font>');
+        };
+
+
 
 
     },
