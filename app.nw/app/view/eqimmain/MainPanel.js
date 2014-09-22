@@ -36,6 +36,11 @@ Ext.define('EqimPrj.view.eqimmain.MainPanel', {
                             action:'closevoice'
                         },
                         {
+                            text:'发送配置',
+                            action:'openconfigwin'
+
+                        },
+                        {
                             text:'关闭',
                             action:'close'
                         }
@@ -68,6 +73,25 @@ Ext.define('EqimPrj.view.eqimmain.MainPanel', {
                     itemId:'connectinfo',
                     text: '无连接'
 
+                },
+                '->',
+                {
+                    xtype: 'image' ,
+                    src:localStorage.serverurl+'images/play.png',
+                    height:20,
+                    overCls:'overhand',
+                    listeners: {
+
+                        render: function(cmp) {
+                            /* Ext.create('Ext.tip.ToolTip', {
+                             target: cmp.el,
+                             html: "<b>刷新</b><br> "
+                             });*/
+
+                            cmp.getEl().on('click', function(){ this.fireEvent('playsendmessageclick', cmp); }, cmp);
+                        }
+                    }
+
                 }
 
             ],
@@ -90,6 +114,18 @@ Ext.define('EqimPrj.view.eqimmain.MainPanel', {
                     xtype:'panel',
                     itemId:'map',
                     html:'<div id="map" style="width: 100%; height: 100%"></div>'
+                },
+                {
+                    region: 'east',
+                    split: true,
+                    title:'发送日志',
+                    //minWidth: 200,
+                    width:200,
+                    maxWidth: 300,
+                    collapsible: true,
+                    collapsed: true,
+                    animCollapse: true,
+                    xtype:'loglistgrid'
                 }
             ]
         });

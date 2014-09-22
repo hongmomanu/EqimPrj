@@ -9,7 +9,9 @@ Ext.define('EqimPrj.controller.EqimMain', {
     extend: 'Ext.app.Controller',
     views: [
          'eqimmain.MainPanel',
-         'eqimmain.EarthListGrid'
+         'eqimmain.EarthListGrid',
+         'eqimmain.ConfigWin',
+         'eqimmain.LogListGrid'
     ],
     models: [
 
@@ -38,19 +40,24 @@ Ext.define('EqimPrj.controller.EqimMain', {
                 click: this.closevoice
             },
             'mainpanel image': {
-                voiceclick: this.voiceclick
+                voiceclick: this.voiceclick,
+                playsendmessageclick:this.playsendmessageclick
             },
             'mainpanel menuitem[action=refresh]':{
                 click: this.refreshwin
             },
             'mainpanel menuitem[action=close]':{
                 click: this.closewin
+            },
+            'mainpanel menuitem[action=openconfigwin]':{
+                click: this.openconfigwin
             }
 
         });
 
     },
     closevoice_state:true,
+    sendmessag_state:false,
     closewin:function(btn){
         Ext.MessageBox.confirm('提示', '你确定关闭程序么?', function(btn){
             if(btn=="yes"){
@@ -62,6 +69,10 @@ Ext.define('EqimPrj.controller.EqimMain', {
     },
     refreshwin:function(btn){
       window.location.reload();
+    },
+    openconfigwin:function(btn){
+        if(!this.configwin)this.configwin= Ext.widget('configwin');
+        this.configwin.show();
     },
     showMap:function(grid, record){
        this.showMaplocation(record.data);
@@ -78,7 +89,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
 
     },
     voiceclick:function(btn){
-        testobj=btn;
+
         if(this.closevoice_state){
             this.closevoice_state=false;
             if(this.audioplay)this.audioplay.pause();
@@ -88,6 +99,17 @@ Ext.define('EqimPrj.controller.EqimMain', {
             this.closevoice_state=true;
             btn.setSrc(localStorage.serverurl+'images/sound.png');
         }
+    },
+    playsendmessageclick:function(btn){
+        if(this.sendmessag_state){
+            this.sendmessag_state=false;
+            btn.setSrc(localStorage.serverurl+'images/play.png');
+        }
+        else {
+            this.sendmessag_state=true;
+            btn.setSrc(localStorage.serverurl+'images/pause.png');
+        }
+
     },
     closevoice:function(btn){
 
