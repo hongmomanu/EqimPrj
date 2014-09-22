@@ -4,87 +4,69 @@ Ext.define('EqimPrj.view.eqimmain.LogListGrid', {
     layout: 'fit',
     requires: [
     ],
-
     initComponent: function() {
         var me = this;
-        //alert(1);
         Ext.apply(me, {
-            //title: '数据相关测试',
+
             border: false,
-            hideHeaders:true,
+            //hideHeaders:true,
             multiSelect: true,
             viewConfig: {
-                trackOver: false,
+                trackOver: true,
                 loadMask: true,
                 scrollToTop: Ext.emptyFn,
-                enableTextSelection:true
+                enableTextSelection:true,
+
+                stripeRows: true
             },
 
+            forceFit: true,
             columns: [
-                {header: '详细信息',dataIndex: 'location',flex: 1,renderer : function(v,m,r) {
-                    console.log(r);
-                    testobj=r;
-                    var str='<ul><li>接收时间:'+r.get('stime')+'</li><li>来源:'+ r.get('cname')+'</li><li>发震时刻:'
-                        +r.get('time')+'</li>' +
-                        '<li>经纬度:'+ r.get('lon').toFixed(3)+','+ r.get('lat').toFixed(3)+'&nbsp;&nbsp;深度:'
-                        + r.get('depth').toFixed(0)+'km</li>' +
-                        '<li>震级:M'+ (r.get('M')==null?"无":r.get('M').toFixed(1))+', Ml'
-                        +(r.get('Ml')==null?"无":r.get('Ml').toFixed(1))+', Ms '+ (r.get('Ms')==null?"无":r.get('Ms').toFixed(1))+
-                        '</li>'+
-                        '<li>地名:'+ r.get('location')+'</li></ul>';
-                    console.log(str);
-                    return str;
-                }}
+                {header: '事件内容', dataIndex: 'logcontent',flex:1},
+
+                {header: '日志时间',dataIndex: 'time',width:130}
             ],
+            flex: 1,
+            tbar:[
 
-            store: Ext.create('Ext.data.Store', {
-                //alias: 'store.ModeStore',
-                autoLoad: false,
-                fields: [
-                    {name: 'location',
-                        type: 'string'},
-                    {name:'lat',
-                        type: 'float'},
-                    {name:'lon',
-                        type: 'float'},
-                    {name:'depth',
-                        type: 'float'},
-                    {name:'eqtype',
-                        type: 'string'},
-                    {name:'M',
-                        type: 'float'},
-                    {name:'Ml',
-                        type: 'float'},
-                    {name:'Ms',
-                        type: 'float'},
-                    {name:'cname',
-                        type: 'string'},
-                    {name:'sname',
-                        type: 'string'},
-                    {name:'time',
-                        type: 'string'},
-                    {name:'stime',
-                        type: 'string'},
-                    {name:'type',
-                        type: 'string'}
-                ],
-                data: [
-                    /*{
-                    location :"杭州",
-                    lat :30.294,
-                    lon:120.158,
-                    depth:"10km",
-                    Ml:"ML",
-                    M:'M',
-                    Ms:'Ms',
-                    time:'2014-12-20 14:00:22',
-                    infotype:'CC'
-                }*/
+                {
+                    xtype:'datefield',
+                    width:120,
+                    itemId:'bgday',
+                    value: Ext.Date.add(new Date(), Ext.Date.DAY, -5),
 
-                ]
-                , sorters: { property: 'stime', direction : 'DESC' }
-            })
+                    name: 'bgday'
+                },{
+                    xtype:'datefield',
+                    itemId:'edday',
+                    width:120,
+                    value:new Date(),
 
+                    name: 'edday'
+                },{
+                    xtype:'button',
+                    text:'搜索',
+                    handler: function() {
+                        var panel=this.up('panel');
+                        var store=panel.getStore();
+                        var bgday=panel.down('#bgday').getValue();
+                        var edday=panel.down('#edday').getValue();
+
+                        store.proxy.extraParams.bgday = Ext.Date.format(new Date(bgday),'Y-m-d');
+                        store.proxy.extraParams.edday = edday;
+                        store.loadPage(1);
+                    }
+                    //action:'search'
+                }
+
+            ],
+            bbar: Ext.create('Ext.PagingToolbar', {
+                store: 'eqimmain.LogDutys',
+                displayInfo: true,
+                displayMsg: '显示 {0} - {1}条记录,共 {2}条记录',
+                emptyMsg: "无记录"
+            }),
+            store: 'eqimmain.LogDutys'
         });
         me.callParent(arguments);
     }

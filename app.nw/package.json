@@ -28,7 +28,7 @@
     "window": {
         "title": "地震信息接收平台",
         "icon": "eqear.png",
-        "toolbar": false,
+        "toolbar": true,
         "position": "mouse"
 
     },

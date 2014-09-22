@@ -120,7 +120,7 @@ Ext.define('EqimPrj.view.eqimmain.MainPanel', {
                     split: true,
                     title:'发送日志',
                     //minWidth: 200,
-                    width:200,
+                    width:300,
                     maxWidth: 300,
                     collapsible: true,
                     collapsed: true,

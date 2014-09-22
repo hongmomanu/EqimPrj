@@ -16,19 +16,13 @@ Ext.define('EqimPrj.view.eqimmain.ConfigWin' ,{
         Ext.apply(this, {
             title: '发送配置',
             height: 510,
-            width: 520,
+            width: 720,
             closeAction : 'hide',
             modal:true,
             resizable:false,
             layout: 'fit',
             items: {
                 xtype: 'form',
-
-                layout: {
-                    type: 'vbox',
-
-                    align: 'stretch'
-                },
 
                 bodyPadding: 10,
                 //xtype: 'fieldset',
@@ -38,7 +32,6 @@ Ext.define('EqimPrj.view.eqimmain.ConfigWin' ,{
                     labelWidth: 100,
                     labelStyle: 'font-weight:bold'
                 },
-
                 items: [
                     {
                         xtype:'fieldset',
@@ -50,6 +43,7 @@ Ext.define('EqimPrj.view.eqimmain.ConfigWin' ,{
                             anchor: '100%'
                         },
                     items:[
+
                         {
                             xtype: 'textfield',
                             fieldLabel: '帐号',
@@ -67,7 +61,24 @@ Ext.define('EqimPrj.view.eqimmain.ConfigWin' ,{
                             name: 'weibopassword'
                         }
 
-                    ]
+                         ]
+                    },{
+                        xtype:'fieldset',
+
+                        title: '发送条件',
+
+                        layout: 'anchor',
+                        defaults: {
+                            anchor: '100%'
+                        },
+                    items:[
+
+                        {
+                            xtype: 'sendmsgconfiggrid'
+
+                        }
+
+                         ]
                     }
 
                 ],

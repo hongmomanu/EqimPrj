@@ -11,13 +11,18 @@ Ext.define('EqimPrj.controller.EqimMain', {
          'eqimmain.MainPanel',
          'eqimmain.EarthListGrid',
          'eqimmain.ConfigWin',
-         'eqimmain.LogListGrid'
+         'eqimmain.LogListGrid',
+         'eqimmain.AddNewSendMsgWin',
+         'eqimmain.SendMsgConfigGrid'
     ],
     models: [
+         'eqimmain.LogDuty',
+         'eqimmain.SendMsgConfig'
 
     ],
     stores: [
-
+          'eqimmain.LogDutys' ,
+          'eqimmain.SendMsgConfigs'
     ],
 
     init: function() {
@@ -32,6 +37,9 @@ Ext.define('EqimPrj.controller.EqimMain', {
             },
             'earthlistgrid':{
                 itemclick: this.showMap
+            },
+            'sendmsgconfiggrid button[action=add]':{
+                click: this.showAddNewSendWin
             },
             'mainpanel menuitem[action=configwin]':{
                 click: this.showServerWin
@@ -73,6 +81,11 @@ Ext.define('EqimPrj.controller.EqimMain', {
     openconfigwin:function(btn){
         if(!this.configwin)this.configwin= Ext.widget('configwin');
         this.configwin.show();
+    },
+    showAddNewSendWin:function(btn){
+        if(!this.newsendwin)this.newsendwin= Ext.widget('addnewsendmsgwin');
+        this.newsendwin.show();
+
     },
     showMap:function(grid, record){
        this.showMaplocation(record.data);
@@ -156,7 +169,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
            var data=event.data;
            data=JSON.parse(data);
            if(data.type==="eqim"){
-               //console.log(data);
+               console.log(data);
                if(data['location'].indexOf('测试')<0){
                    store.add(data);
                    me.showMaplocation(data);
