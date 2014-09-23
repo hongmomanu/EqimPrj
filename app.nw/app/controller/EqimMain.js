@@ -145,9 +145,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
     },
     editsendmsgwin:function(btn){
 
-        //var sm =
         var selectitem=btn.up('panel').getSelectionModel().getLastSelected();
-
         if(!selectitem){
             Ext.Msg.alert("提示信息", "请选中编辑项");
             return;
@@ -156,7 +154,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
         this.myeditsendmsgwin.show();
 
         var item=selectitem.data;
-        console.log(item);
+
         item.sendmethod=eval(item.sendmethod);
         var form=this.myeditsendmsgwin.down('form').getForm();
 
@@ -167,7 +165,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
         var me=this;
         var successFunc = function (form, action) {
             var grid=me.userwin.down('grid');
-            var win=btn.up('window').close();
+            btn.up('window').close();
             grid.getStore().load();
         };
         var failFunc = function (form, action) {
