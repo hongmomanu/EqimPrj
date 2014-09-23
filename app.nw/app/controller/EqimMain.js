@@ -36,6 +36,9 @@ Ext.define('EqimPrj.controller.EqimMain', {
                 afterrender: this.layoutfunc,
                 afterlayout:this.afterlayout
             },
+            'configwin button[action=save]':{
+                click: this.savesendmsgconfig
+            },
             'addnewsendmsgwin button[action=add]':{
                 click: this.addnewsendmsg
             },
@@ -156,6 +159,41 @@ Ext.define('EqimPrj.controller.EqimMain', {
         };
         var form = btn.up('form');
         CommonFunc.formSubmit(form,{},url,successFunc,failFunc,"正在提交。。。")
+    },
+    savesendmsgconfig:function(btn){
+        var grid=btn.up('window').down('grid');
+        var url='log/updateSendMsgConfig';
+        var store=grid.getStore();
+        var me=this;
+
+        var changed_data=store.getModifiedRecords();
+        me.count=0;
+        for(var i=0;i<changed_data.length;i++){
+
+
+
+            var successFunc = function (form, action) {
+                var grid=me.configwin.down('grid');
+                me.count++;
+                if(me.count==changed_data.length){
+                    grid.getStore().load();
+                    grid.getSelectionModel().deselectAll();
+
+                }
+
+            };
+            var failFunc = function (form, action) {
+                Ext.Msg.alert("提示信息",action.result.msg);
+            };
+            var form = btn.up('form');
+            var item={};
+            item.id=changed_data[i].data.id;
+            item.is_active= changed_data[i].data.is_active;
+            CommonFunc.ajaxSend(item, url, successFunc, failFunc, "post")
+        }
+
+
+
     },
     addnewsendmsg:function(btn){
         var url='log/insertSendMsgConfig';
