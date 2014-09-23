@@ -47,8 +47,8 @@ Ext.define('EqimPrj.view.eqimmain.AddNewSendMsgWin' ,{
                         store:  Ext.create('Ext.data.Store', {
                             fields: ['value', 'name'],
                             data : [
-                                {"value":1, "name":"不启用"},
-                                {"value":0, "name":"启用"}
+                                {"value":false, "name":"不启用"},
+                                {"value":true, "name":"启用"}
                             ]
                         }),
                         valueField: 'value',

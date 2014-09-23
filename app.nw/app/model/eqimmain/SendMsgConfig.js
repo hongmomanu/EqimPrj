@@ -6,7 +6,7 @@ Ext.define('EqimPrj.model.eqimmain.SendMsgConfig', {
     fields: [
         {
             name: 'is_active',
-            type:'int'
+            type:'boolean'
         },
         {
             name:'id',

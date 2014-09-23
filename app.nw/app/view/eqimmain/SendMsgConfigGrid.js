@@ -6,40 +6,27 @@ Ext.define('EqimPrj.view.eqimmain.SendMsgConfigGrid', {
     ],
     initComponent: function() {
         var me = this;
-        var selModel = Ext.create('Ext.selection.CheckboxModel', {
-            checkOnly:true,
-            columns: [{
-                xtype: 'checkcolumn',
-                text: 'Active',
-                dataIndex: 'is_active'
-            }]});
+
         Ext.apply(me, {
 
             border: false,
             //hideHeaders:true,
-            multiSelect: true,
+            //multiSelect: true,
             viewConfig: {
-                trackOver: true,
+                /*trackOver: true,
                 loadMask: true,
                 scrollToTop: Ext.emptyFn,
                 enableTextSelection:true,
 
-                stripeRows: true
+                stripeRows: true*/
             },
-            selModel: selModel,
+            //selModel: selModel,
             forceFit: true,
             columns: [
 
-               /* {header: '是否启用',  xtype : 'checkcolumn',dataIndex: 'is_active',editor:
-                 *//*renderer:function(val, m, rec) {
+                {header: '是否启用',  xtype : 'checkcolumn',dataIndex: 'is_active'
+                },
 
-                 if (rec.get('is_active') == 0)
-                 return '';
-                 else{
-                 return (new Ext.grid.column.CheckColumn).renderer(val);
-                 }
-                 }*//*
-                },*/
                 {header: '是否启用',   dataIndex: 'id',hidden:true},
                 {header: '来源',dataIndex: 'source',width:60},
                 {header: '震中地区',dataIndex: 'epicenter',width:120},
@@ -48,7 +35,7 @@ Ext.define('EqimPrj.view.eqimmain.SendMsgConfigGrid', {
                 {header: '发送方式',dataIndex: 'sendmethod',flex:1}
 
             ],
-            flex: 1,
+
             tbar:[
 
                 {
