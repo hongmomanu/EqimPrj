@@ -14,16 +14,20 @@ Ext.define('EqimPrj.controller.EqimMain', {
          'eqimmain.LogListGrid',
          'eqimmain.AddNewSendMsgWin',
          'eqimmain.EditSendMsgWin',
+         'eqimmain.SendMsgUsersGrid',
+         'eqimmain.AddNewSendUserWin',
          'eqimmain.SendMsgConfigGrid'
     ],
     models: [
          'eqimmain.LogDuty',
+         'eqimmain.SendMsgUser',
          'eqimmain.SendMsgConfig'
 
     ],
     stores: [
           'eqimmain.LogDutys' ,
-          'eqimmain.SendMsgConfigs'
+          'eqimmain.SendMsgConfigs',
+          'eqimmain.SendMsgUsers'
     ],
 
     init: function() {
@@ -48,14 +52,23 @@ Ext.define('EqimPrj.controller.EqimMain', {
             'sendmsgconfiggrid button[action=add]':{
                 click: this.showAddNewSendWin
             },
+            'sendmsgusersgrid button[action=add]':{
+                click: this.showAddNewSendUsersWin
+            },
             'sendmsgconfiggrid button[action=edit]':{
                 click: this.editsendmsgwin
             },
             'editsendmsgwin button[action=save]':{
                 click: this.savesendmsg
             },
+            'addnewsenduserwin button[action=save]':{
+                click: this.addnewsenduser
+            },
             'mainpanel menuitem[action=configwin]':{
                 click: this.showServerWin
+            },
+            'mainpanel menuitem[action=openuserswin]':{
+                click: this.showUsersWin
             },
             'mainpanel menuitem[action=closevoice]':{
                 click: this.closevoice
@@ -125,6 +138,11 @@ Ext.define('EqimPrj.controller.EqimMain', {
         this.newsendwin.show();
 
     },
+    showAddNewSendUsersWin:function(btn){
+        if(!this.newsenduserwin)this.newsenduserwin= Ext.widget('addnewsenduserwin');
+        this.newsenduserwin.show();
+
+    },
     editsendmsgwin:function(btn){
 
         //var sm =
@@ -143,6 +161,20 @@ Ext.define('EqimPrj.controller.EqimMain', {
         var form=this.myeditsendmsgwin.down('form').getForm();
 
         form.setValues(item);
+    },
+    addnewsenduser:function(btn){
+        var url='log/insertSendMsgUsers';
+        var me=this;
+        var successFunc = function (form, action) {
+            var grid=me.userwin.down('grid');
+            var win=btn.up('window').close();
+            grid.getStore().load();
+        };
+        var failFunc = function (form, action) {
+            Ext.Msg.alert("提示信息",action.result.msg);
+        };
+        var form = btn.up('form');
+        CommonFunc.formSubmit(form,{},url,successFunc,failFunc,"正在提交。。。")
     },
     savesendmsg:function(btn){
         var url='log/updateSendMsgConfig';
@@ -250,6 +282,22 @@ Ext.define('EqimPrj.controller.EqimMain', {
 
       if(this.closevoice_state)this.closevoice_state=false;
        else this.closevoice_state=true;
+    },
+    showUsersWin:function(btn){
+
+        if(!this.userwin){
+            var win=Ext.create('Ext.window.Window', {
+                title: 'Hello',
+                height: 200,
+                width: 400,
+                layout: 'fit',
+                items: {  // Let's put an empty grid in just to illustrate fit layout
+                    xtype: 'sendmsgusersgrid'
+                }
+            })              ;
+            this.userwin= win;
+        }
+        this.userwin.show();
     },
     showServerWin:function(btn){
         Ext.MessageBox.show({

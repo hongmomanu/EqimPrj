@@ -41,6 +41,11 @@ Ext.define('EqimPrj.view.eqimmain.MainPanel', {
 
                         },
                         {
+                            text:'短信人员配置',
+                            action:'openuserswin'
+
+                        },
+                        {
                             text:'关闭',
                             action:'close'
                         }
