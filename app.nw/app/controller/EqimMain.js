@@ -61,7 +61,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
             'editsendmsgwin button[action=save]':{
                 click: this.savesendmsg
             },
-            'addnewsenduserwin button[action=save]':{
+            'addnewsenduserwin button[action=add]':{
                 click: this.addnewsenduser
             },
             'mainpanel menuitem[action=configwin]':{
