@@ -47,8 +47,8 @@ Ext.define('EqimPrj.view.eqimmain.EditSendMsgWin' ,{
                         store:  Ext.create('Ext.data.Store', {
                             fields: ['value', 'name'],
                             data : [
-                                {"value":1, "name":"不启用"},
-                                {"value":0, "name":"启用"}
+                                {"value":0, "name":"不启用"},
+                                {"value":1, "name":"启用"}
                             ]
                         }),
                         valueField: 'value',
@@ -60,6 +60,14 @@ Ext.define('EqimPrj.view.eqimmain.EditSendMsgWin' ,{
                         required:true,
                         allowBlank:false,
                         afterLabelTextTpl: required,
+                        fieldLabel: '来源'
+                    },
+                    {
+                        xtype: 'textfield',
+                        name:'id',
+
+                        hidden:true,
+
                         fieldLabel: '来源'
                     },
                     {

@@ -48,6 +48,9 @@ Ext.define('EqimPrj.controller.EqimMain', {
             'sendmsgconfiggrid button[action=edit]':{
                 click: this.editsendmsgwin
             },
+            'editsendmsgwin button[action=save]':{
+                click: this.savesendmsg
+            },
             'mainpanel menuitem[action=configwin]':{
                 click: this.showServerWin
             },
@@ -86,8 +89,33 @@ Ext.define('EqimPrj.controller.EqimMain', {
       window.location.reload();
     },
     openconfigwin:function(btn){
-        if(!this.configwin)this.configwin= Ext.widget('configwin');
-        this.configwin.show();
+        if(!this.configwin){
+            this.configwin= Ext.widget('configwin');
+            this.configwin.show();
+            var grid=this.configwin.down('grid');
+            var store=grid.getStore() ;
+
+            store.on('load',function(a,data,c){
+                var selMod = grid.getSelectionModel();
+                testobj=selMod;
+               for(var i=0;i<data.length;i++){
+
+                  if(data[i].data.is_active==1){
+                      console.log(data[i].data.is_active);
+                    selMod.select(i,true,true);
+                  }else{
+                      console.log(data[i].data.is_active);
+                      selMod.select(i,false,false);
+                  }
+
+               }
+            });
+            store.load();
+        }else{
+            this.configwin.show();
+        }
+
+
     },
     showAddNewSendWin:function(btn){
         if(!this.newsendwin)this.newsendwin= Ext.widget('addnewsendmsgwin');
@@ -95,17 +123,39 @@ Ext.define('EqimPrj.controller.EqimMain', {
 
     },
     editsendmsgwin:function(btn){
-        var sm = btn.up('panel').getSelectionModel();
-        var selectitem=sm.getSelection();
-        if(selectitem.length==0){
+
+        //var sm =
+        var selectitem=btn.up('panel').getSelectionModel().getLastSelected();
+
+        if(!selectitem){
             Ext.Msg.alert("提示信息", "请选中编辑项");
             return;
         }
         if(!this.myeditsendmsgwin)this.myeditsendmsgwin= Ext.widget('editsendmsgwin');
         this.myeditsendmsgwin.show();
-        var item=selectitem[0].data;
+
+        var item=selectitem.data;
+        console.log(item);
+        item.sendmethod=eval(item.sendmethod);
         var form=this.myeditsendmsgwin.down('form').getForm();
+
         form.setValues(item);
+    },
+    savesendmsg:function(btn){
+        var url='log/updateSendMsgConfig';
+        var me=this;
+        var successFunc = function (form, action) {
+            var grid=me.configwin.down('grid');
+            var win=btn.up('window').close();
+
+            grid.getStore().load();
+            grid.getSelectionModel().deselectAll();
+        };
+        var failFunc = function (form, action) {
+            Ext.Msg.alert("提示信息",action.result.msg);
+        };
+        var form = btn.up('form');
+        CommonFunc.formSubmit(form,{},url,successFunc,failFunc,"正在提交。。。")
     },
     addnewsendmsg:function(btn){
         var url='log/insertSendMsgConfig';
