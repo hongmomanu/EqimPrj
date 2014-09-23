@@ -13,6 +13,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
          'eqimmain.ConfigWin',
          'eqimmain.LogListGrid',
          'eqimmain.AddNewSendMsgWin',
+         'eqimmain.EditSendMsgWin',
          'eqimmain.SendMsgConfigGrid'
     ],
     models: [
@@ -35,11 +36,17 @@ Ext.define('EqimPrj.controller.EqimMain', {
                 afterrender: this.layoutfunc,
                 afterlayout:this.afterlayout
             },
+            'addnewsendmsgwin button[action=add]':{
+                click: this.addnewsendmsg
+            },
             'earthlistgrid':{
                 itemclick: this.showMap
             },
             'sendmsgconfiggrid button[action=add]':{
                 click: this.showAddNewSendWin
+            },
+            'sendmsgconfiggrid button[action=edit]':{
+                click: this.editsendmsgwin
             },
             'mainpanel menuitem[action=configwin]':{
                 click: this.showServerWin
@@ -86,6 +93,33 @@ Ext.define('EqimPrj.controller.EqimMain', {
         if(!this.newsendwin)this.newsendwin= Ext.widget('addnewsendmsgwin');
         this.newsendwin.show();
 
+    },
+    editsendmsgwin:function(btn){
+        var sm = btn.up('panel').getSelectionModel();
+        var selectitem=sm.getSelection();
+        if(selectitem.length==0){
+            Ext.Msg.alert("提示信息", "请选中编辑项");
+            return;
+        }
+        if(!this.myeditsendmsgwin)this.myeditsendmsgwin= Ext.widget('editsendmsgwin');
+        this.myeditsendmsgwin.show();
+        var item=selectitem[0].data;
+        var form=this.myeditsendmsgwin.down('form').getForm();
+        form.setValues(item);
+    },
+    addnewsendmsg:function(btn){
+        var url='log/insertSendMsgConfig';
+        var me=this;
+        var successFunc = function (form, action) {
+            var grid=me.configwin.down('grid');
+            var win=btn.up('window').close();
+            grid.getStore().load();
+        };
+        var failFunc = function (form, action) {
+            Ext.Msg.alert("提示信息",action.result.msg);
+        };
+        var form = btn.up('form');
+        CommonFunc.formSubmit(form,{},url,successFunc,failFunc,"正在提交。。。")
     },
     showMap:function(grid, record){
        this.showMaplocation(record.data);

@@ -35,6 +35,7 @@ Ext.define('EqimPrj.view.eqimmain.ConfigWin' ,{
                 items: [
                     {
                         xtype:'fieldset',
+                        flex:1,
 
                         title: '微博帐号',
 
@@ -64,7 +65,7 @@ Ext.define('EqimPrj.view.eqimmain.ConfigWin' ,{
                          ]
                     },{
                         xtype:'fieldset',
-
+                        flex:3,
                         title: '发送条件',
 
                         layout: 'anchor',

@@ -2,15 +2,15 @@
  * Created by jack on 14-9-22.
  */
 
-Ext.define('EqimPrj.view.eqimmain.AddNewSendMsgWin' ,{
+Ext.define('EqimPrj.view.eqimmain.EditSendMsgWin' ,{
     extend: 'Ext.window.Window',
-    alias : 'widget.addnewsendmsgwin',
+    alias : 'widget.editsendmsgwin',
     requires: [
     ],
     initComponent: function() {
         var required = '<span style="color:red;font-weight:bold" data-qtip="必填字段">*</span>';
         Ext.apply(this, {
-            title: '新增发送条件',
+            title: '编辑窗口',
             height: 500,
             width: 520,
             closeAction : 'hide',
@@ -126,8 +126,8 @@ Ext.define('EqimPrj.view.eqimmain.AddNewSendMsgWin' ,{
                         }
                     } ,
                     {
-                        text: '新增',
-                        action: 'add'
+                        text: '保存',
+                        action: 'save'
 
                     }
                 ],

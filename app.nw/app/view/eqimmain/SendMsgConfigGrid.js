@@ -28,19 +28,24 @@ Ext.define('EqimPrj.view.eqimmain.SendMsgConfigGrid', {
                 {header: '震中地区',dataIndex: 'epicenter',width:120},
                 {header: '条件',dataIndex: 'compare',width:60},
                 {header: '条件值',dataIndex: 'comparedata',width:60},
-                {header: '发送方式',dataIndex: 'comparedata',flex:1}
+                {header: '发送方式',dataIndex: 'sendmethod',flex:1}
 
             ],
             flex: 1,
             tbar:[
 
                 {
-                    xtype:'button',
+
                     text:'新增',
                     action:'add'
                 },
                 {
-                    xtype:'button',
+                    text:'编辑',
+                    action:'edit'
+
+                },
+                {
+
                     text:'删除',
                     action:'add'
                 }
@@ -52,7 +57,7 @@ Ext.define('EqimPrj.view.eqimmain.SendMsgConfigGrid', {
                 displayMsg: '显示 {0} - {1}条记录,共 {2}条记录',
                 emptyMsg: "无记录"
             }),
-            store: 'eqimmain.LogDutys'
+            store: 'eqimmain.SendMsgConfigs'
         });
         me.callParent(arguments);
     }
