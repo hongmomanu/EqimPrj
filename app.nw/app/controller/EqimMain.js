@@ -458,7 +458,10 @@ Ext.define('EqimPrj.controller.EqimMain', {
                    var play=new Audio(resoreceurl);
                    me.audioplay=play;
                    if(me.closevoice_state)play.play();
-                   me.sendMsg(data);
+                   if(me.sendmessag_state){
+                       me.sendMsg(data);
+                   }
+
                }
 
            }
