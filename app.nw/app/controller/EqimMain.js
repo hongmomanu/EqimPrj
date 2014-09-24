@@ -276,6 +276,27 @@ Ext.define('EqimPrj.controller.EqimMain', {
         CommonFunc.ajaxSend(item, url, successFunc, failFunc, "post");
 
     },
+    makelog:function(data,type){
+
+        var content=this.contentFormat(data,type);
+        var url='duty/senddutylogs';
+        var data={
+            statustype:"发送消息",
+            logcontent:content};
+        var params={
+            systemlogs:Ext.JSON.encode(data)
+        };
+        var successFunc = function (response, action) {
+            Ext.getStore('eqimmain.LogDutys').load();
+
+        };
+        var failFunc = function (form, action) {
+            Ext.Msg.alert("提示信息", "失败!");
+        };
+        CommonFunc.ajaxSend(params, url, successFunc, failFunc, "post");
+
+    },
+
     sendWeb:function(data,type){
         console.log("wangye");
         var url='log/sendsoap';
@@ -287,18 +308,69 @@ Ext.define('EqimPrj.controller.EqimMain', {
             Ext.Msg.alert("提示信息","发布失败");
         };
 
+
+        /*item.content='<?xml version="1.0" encoding="utf-8"?>'+
+            '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ' +
+            'xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">'
+            +'<soap:Body><GetAllCatalogList xmlns="http://www.zjdz.gov.cn/">'
+            +'<QuickInsert xmlns="http://www.zjdz.gov.cn/">'
+            +'<username>ZJDZ</username>'
+            +'<password>L9dP2kaB</password>'
+            +'<title>ceshishi</title>'
+            +'<cid>371</cid>'
+            +'<summary>string</summary>'
+            +'<content>'+content+'</content>'
+            +'<coordinate>'+data.lon+','+data.lat+'</coordinate>'
+            +'<published>'+data.time+'</published>'
+            +'</QuickInsert>'
+            +'</soap:Body>'
+            +'</soap:Envelope>';
+        item.url="http://www.zjdz.gov.cn/webservice/articleapi.asmx?op=QuickInsert";*/
+
+/*
+ item.content='<?xml version="1.0" encoding="utf-8"?>'+
+ '<soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">'
+ +'<soap12:Body>'
+ +'<GetAllCatalogList xmlns="http://www.zjdz.gov.cn/">'
+ +'<username>ZJDZ</username>'
+ +'<password>L9dP2kaB</password>'
+ +'</GetAllCatalogList>'
+ +'</soap12:Body>'
+ +'</soap12:Envelope>';*/
+
+
         var item={};
 
         //item.content=this.contentFormat(data,type);
+
         item.content='<?xml version="1.0" encoding="utf-8"?>'+
-            '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">'
-            +'<soap:Body><GetAllCatalogList xmlns="http://www.zjdz.gov.cn/"><username>ZJDZ</username>'
+            '<soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">'
+             +'<soap12:Body>'
+            /*+'<GetAllCatalogList xmlns="http://www.zjdz.gov.cn/">'
+            +'<username>ZJDZ</username>'
             +'<password>L9dP2kaB</password>'
-            +'</GetAllCatalogList>'
-            +'</soap:Body>'
-            +'</soap:Envelope>';
-        item.url="http://www.zjdz.gov.cn/webservice/articleapi.asmx?op=GetAllCatalogList";
-        //CommonFunc.ajaxSend(item, url, successFunc, failFunc, "post");
+            +'</GetAllCatalogList>'*/
+            +'<QuickInsert xmlns="http://www.zjdz.gov.cn/">'
+            +'<username>ZJDZ</username>'
+            +'<password>L9dP2kaB</password>'
+            +'<title>ceshishi111111111111111111111</title>'
+            +'<cid>371</cid>'
+            +'<summary></summary>'
+            +'<content>1212121212121212111111111</content>'
+            +'<preview>11</preview>'
+            +'<author>11</author>'
+            +'<source>11</source>'
+            +'<coordinate>122.321,32.3292</coordinate>'
+            +'<published>'+data.time+'</published>'
+            +'</QuickInsert>'
+
+            +'</soap12:Body>'
+            +'</soap12:Envelope>';
+        //item.action="http://www.zjdz.gov.cn/GetAllCatalogList";
+        //item.action="http://www.zjdz.gov.cn/QuickInsert";
+        //item.url="http://www.zjdz.gov.cn/webservice/articleapi.asmx?op=GetAllCatalogList";
+        item.url="http://www.zjdz.gov.cn/webservice/articleapi.asmx?op=QuickInsert";
+        CommonFunc.ajaxSend(item, url, successFunc, failFunc, "post");
 
 
     },
@@ -460,6 +532,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
                    if(me.closevoice_state)play.play();
                    if(me.sendmessag_state){
                        me.sendMsg(data);
+                       me.makelog(data,"自动测定");
                    }
 
                }
