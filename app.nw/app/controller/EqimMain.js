@@ -109,6 +109,9 @@ Ext.define('EqimPrj.controller.EqimMain', {
             this.configwin= Ext.widget('configwin');
         }
         this.configwin.show();
+        var form =this.configwin.down('form').getForm();
+
+        form.setValues({"weibousername":localStorage.weibousername,"weibopassword":localStorage.weibopassword});
 
 
     },
@@ -175,12 +178,14 @@ Ext.define('EqimPrj.controller.EqimMain', {
         var store=grid.getStore();
         var me=this;
 
+        var form =btn.up('window').down('form');
+
+        localStorage.weibousername=form.getValues().weibousername;
+        localStorage.weibopassword=form.getValues().weibopassword;
+
         var changed_data=store.getModifiedRecords();
         me.count=0;
         for(var i=0;i<changed_data.length;i++){
-
-
-
             var successFunc = function (form, action) {
                 var grid=me.configwin.down('grid');
                 me.count++;
@@ -189,7 +194,6 @@ Ext.define('EqimPrj.controller.EqimMain', {
                     grid.getSelectionModel().deselectAll();
 
                 }
-
             };
             var failFunc = function (form, action) {
                 Ext.Msg.alert("提示信息",action.result.msg);
@@ -200,6 +204,8 @@ Ext.define('EqimPrj.controller.EqimMain', {
             item.is_active= changed_data[i].data.is_active;
             CommonFunc.ajaxSend(item, url, successFunc, failFunc, "post")
         }
+
+        Ext.Msg.alert("提示信息","保存成功!");
 
 
 
@@ -249,8 +255,8 @@ Ext.define('EqimPrj.controller.EqimMain', {
           "日"+(time.getHours()<10?"0"+time.getHours():time.getHours())+"时"+
           (time.getMinutes()<10?"0"+time.getMinutes():time.getMinutes())+"分"+
           data.location
-          +"附近（"+(data.lat>=0?"北纬":"南纬")+Math.abs(data.lat)+"度，" +
-          +(data.lon>=0?"东经":"西经")+Math.abs(data.lon)+"度）发生"+data.M+"级左右地震，最终结果以正式速报为准。";
+          +"附近（"+(data.lat>=0?"北纬":"南纬")+Math.abs(data.lat).toFixed(1)+"度，"
+          +(data.lon>=0?"东经":"西经")+Math.abs(data.lon).toFixed(1)+"度）发生"+data.M+"级左右地震，最终结果以正式速报为准。";
       return content;
     },
     sendTel:function(data,type){
@@ -270,11 +276,55 @@ Ext.define('EqimPrj.controller.EqimMain', {
         CommonFunc.ajaxSend(item, url, successFunc, failFunc, "post");
 
     },
-    sendWeb:function(data){
+    sendWeb:function(data,type){
         console.log("wangye");
+        var url='log/sendsoap';
+
+        var successFunc = function (form, action) {
+            Ext.Msg.alert("提示信息","网页发布成功");
+        };
+        var failFunc = function (form, action) {
+            Ext.Msg.alert("提示信息","发布失败");
+        };
+
+        var item={};
+
+        //item.content=this.contentFormat(data,type);
+        item.content='<?xml version="1.0" encoding="utf-8"?>'+
+            '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">'
+            +'<soap:Body><GetAllCatalogList xmlns="http://www.zjdz.gov.cn/"><username>ZJDZ</username>'
+            +'<password>L9dP2kaB</password>'
+            +'</GetAllCatalogList>'
+            +'</soap:Body>'
+            +'</soap:Envelope>';
+        item.url="http://www.zjdz.gov.cn/webservice/articleapi.asmx?op=GetAllCatalogList";
+        //CommonFunc.ajaxSend(item, url, successFunc, failFunc, "post");
+
+
     },
-    sendWeiBo:function(data){
+    sendWeiBo:function(data,type){
         console.log("weibo");
+        var url='log/sendweibo';
+
+        var successFunc = function (form, action) {
+            Ext.Msg.alert("提示信息","微博发布成功");
+        };
+        var failFunc = function (form, action) {
+            Ext.Msg.alert("提示信息","发布失败");
+        };
+
+        var item={};
+        item.username=localStorage.weibousername;
+        item.password=localStorage.weibopassword;
+        item.content=this.contentFormat(data,type);
+        item.content="#地震快讯#"+ item.content;
+        if(item.password&&item.password){
+            CommonFunc.ajaxSend(item, url, successFunc, failFunc, "post");
+        }else{
+            Ext.Msg.alert("提示信息","微博发布失败,查看用户密码是否正确");
+        }
+
+
     },
     sendMsg:function(data){
         console.log(data);
