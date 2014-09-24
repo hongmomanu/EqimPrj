@@ -107,29 +107,8 @@ Ext.define('EqimPrj.controller.EqimMain', {
     openconfigwin:function(btn){
         if(!this.configwin){
             this.configwin= Ext.widget('configwin');
-            this.configwin.show();
-            var grid=this.configwin.down('grid');
-            var store=grid.getStore() ;
-
-            store.on('load',function(a,data,c){
-                var selMod = grid.getSelectionModel();
-                testobj=selMod;
-               for(var i=0;i<data.length;i++){
-
-                  if(data[i].data.is_active==1){
-                      console.log(data[i].data.is_active);
-                    selMod.select(i,true,true);
-                  }else{
-                      console.log(data[i].data.is_active);
-                      selMod.select(i,false,false);
-                  }
-
-               }
-            });
-            store.load();
-        }else{
-            this.configwin.show();
         }
+        this.configwin.show();
 
 
     },
@@ -242,6 +221,88 @@ Ext.define('EqimPrj.controller.EqimMain', {
     showMap:function(grid, record){
        this.showMaplocation(record.data);
     },
+    isplacein:function(location,epicenter){
+        var iscontain=false;
+        var arrs=epicenter.split(",");
+        for(var i=0;i<arrs.length;i++){
+            if(location.indexOf(arrs[i])>=0){
+                iscontain=true;
+                break;
+            }
+        }
+
+       return  iscontain;
+    },
+    contentFormat:function(data,type){
+      var content ="";
+      var code_name="";
+      var time=new Date(data.time);
+
+      if(data.code=="AU"){
+          code_name="中国地震台网中心"+type
+      }else if(data.code=="GD"){
+          code_name="广东省地震局"+type
+      }else if(data.code=="FJ"){
+          code_name="福建省地震局"+type
+      }
+      content=code_name+"："+(time.getMonth()+1)+"月"+(time.getDate())+
+          "日"+(time.getHours()<10?"0"+time.getHours():time.getHours())+"时"+
+          (time.getMinutes()<10?"0"+time.getMinutes():time.getMinutes())+"分"+
+          data.location
+          +"附近（"+(data.lat>=0?"北纬":"南纬")+Math.abs(data.lat)+"度，" +
+          +(data.lon>=0?"东经":"西经")+Math.abs(data.lon)+"度）发生"+data.M+"级左右地震，最终结果以正式速报为准。";
+      return content;
+    },
+    sendTel:function(data,type){
+        console.log("TEL");
+        var url='log/sendtelmsg';
+
+        var successFunc = function (form, action) {
+            Ext.Msg.alert("提示信息","短信发送成功");
+        };
+        var failFunc = function (form, action) {
+            Ext.Msg.alert("提示信息",action.result.msg);
+        };
+
+        var item={};
+
+        item.content=this.contentFormat(data,type);
+        CommonFunc.ajaxSend(item, url, successFunc, failFunc, "post");
+
+    },
+    sendWeb:function(data){
+        console.log("wangye");
+    },
+    sendWeiBo:function(data){
+        console.log("weibo");
+    },
+    sendMsg:function(data){
+        console.log(data);
+        var configdata=Ext.StoreMgr.get('eqimmain.SendMsgConfigs').data.items;
+        var filterdata=[];
+        for(var i=0;i<configdata.length;i++){
+            if(configdata[i].data.is_active)filterdata.push(configdata[i].data);
+        }
+        for(var i=0;i<filterdata.length;i++){
+            if(data.code==filterdata[i].source&&
+                eval(data.M+filterdata[i].compare+filterdata[i].comparedata)
+                && this.isplacein(data.location, filterdata[i].epicenter)
+                ){
+                 if(filterdata[i].sendmethod.indexOf(0)>=0){
+                     this.sendTel(data,"自动测定");
+                 }
+                if(filterdata[i].sendmethod.indexOf(1)>=0){
+                     this.sendWeiBo(data,"自动测定");
+                 }
+                if(filterdata[i].sendmethod.indexOf(2)>=0){
+                     this.sendWeb(data,"自动测定");
+                 }
+                break;
+
+            }
+        }
+
+    },
     showMaplocation:function(data){
         this.map.panTo(new L.LatLng(data.lat,data.lon));
         if(this.popupmarker)this.map.removeLayer(this.popupmarker);
@@ -314,6 +375,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
         });
     },
     afterlayout:function(panel){
+        testobj=this;
         if(this.map)this.map.invalidateSize(true);
 
     },
@@ -337,15 +399,16 @@ Ext.define('EqimPrj.controller.EqimMain', {
            var data=event.data;
            data=JSON.parse(data);
            if(data.type==="eqim"){
-               console.log(data);
+
                if(data['location'].indexOf('测试')<0){
                    store.add(data);
                    me.showMaplocation(data);
+
                    var resoreceurl=localStorage.serverurl+"audio/eqim.wav";
                    var play=new Audio(resoreceurl);
                    me.audioplay=play;
                    if(me.closevoice_state)play.play();
-
+                   me.sendMsg(data);
                }
 
            }
