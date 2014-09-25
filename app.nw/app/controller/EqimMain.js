@@ -17,6 +17,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
          'eqimmain.SendMsgUsersGrid',
          'eqimmain.AddNewSendUserWin',
          'eqimmain.EditSendUserWin',
+         'eqimmain.ManualSendMsgWin',
          'eqimmain.SendMsgConfigGrid'
     ],
     models: [
@@ -76,6 +77,9 @@ Ext.define('EqimPrj.controller.EqimMain', {
             'addnewsenduserwin button[action=add]':{
                 click: this.addnewsenduser
             },
+            'manualsendmsgwin button[action=send]':{
+                click: this.manualsend
+            },
             'mainpanel menuitem[action=configwin]':{
                 click: this.showServerWin
             },
@@ -85,6 +89,10 @@ Ext.define('EqimPrj.controller.EqimMain', {
             'mainpanel menuitem[action=closevoice]':{
                 click: this.closevoice
             },
+            'mainpanel button[action=manualsend]':{
+                click: this.showmanualwin
+            },
+
             'mainpanel image': {
                 voiceclick: this.voiceclick,
                 playsendmessageclick:this.playsendmessageclick
@@ -167,6 +175,27 @@ Ext.define('EqimPrj.controller.EqimMain', {
         var form=this.myeditsendmsgwin.down('form').getForm();
 
         form.setValues(item);
+    },
+    manualsend:function(btn){
+      var form=btn.up('window').down('form').getForm();
+      var me=this;
+      if(form.isValid()){
+         var sendways=form.getValues().sendway;
+          if(!sendways||sendways.length==0){
+              Ext.Msg.alert("提示信息","请至少选择一个发送方式!");
+          }else{
+              if(sendways.indexOf("0")>=0){
+                 me.sendTelDetai(form.getValues().content);
+              }if(sendways.indexOf("1")>=0){
+                  me.sendWeiBoDetai(form.getValues().content);
+              }/*if(sendways.indexOf("2")>=0){
+                  me.sendWebDetai(form.getValues().content);
+              }*/
+          }
+      }else{
+          Ext.Msg.alert("提示信息","请填写发送内容!");
+      }
+
     },
     addnewsenduser:function(btn){
         var url='log/insertSendMsgUsers';
@@ -541,6 +570,13 @@ Ext.define('EqimPrj.controller.EqimMain', {
 
       if(this.closevoice_state)this.closevoice_state=false;
        else this.closevoice_state=true;
+    },
+    showmanualwin:function(btn){
+        //alert(11);
+        testobj=this;
+        if(!this.manualsendmsgwin)this.manualsendmsgwin= Ext.widget('manualsendmsgwin');
+        this.manualsendmsgwin.show();
+
     },
     showUsersWin:function(btn){
 

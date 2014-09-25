@@ -45,6 +45,7 @@ Ext.define('EqimPrj.view.eqimmain.MainPanel', {
                             action:'openuserswin'
 
                         },
+
                         {
                             text:'关闭',
                             action:'close'
@@ -80,6 +81,11 @@ Ext.define('EqimPrj.view.eqimmain.MainPanel', {
 
                 },
                 '->',
+                {
+                    text:'手工发送',
+                    action:'manualsend'
+                },
+                '-',
                 {
                     xtype: 'image' ,
                     src:localStorage.serverurl+'images/play.png',
