@@ -35,9 +35,9 @@ Ext.define('EqimPrj.view.eqimmain.SendMsgConfigGrid', {
                 {header: '发送方式',dataIndex: 'sendmethod',flex:1,renderer : function(v,m,r) {
 
                     var str="";
-                    if(v.indexOf("0")>=0)str+="短信";
-                    if(v.indexOf("1")>=0)str+=",微博";
-                    if(v.indexOf("2")>=0)str+=",网站";
+                    if(v.indexOf("0")>=0)str+=" 短信";
+                    if(v.indexOf("1")>=0)str+=" 微博";
+                    if(v.indexOf("2")>=0)str+=" 网站";
                     return str;
                 }}
 
@@ -58,7 +58,7 @@ Ext.define('EqimPrj.view.eqimmain.SendMsgConfigGrid', {
                 {
 
                     text:'删除',
-                    action:'add'
+                    action:'del'
                 }
 
             ],

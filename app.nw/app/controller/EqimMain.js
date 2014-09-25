@@ -16,6 +16,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
          'eqimmain.EditSendMsgWin',
          'eqimmain.SendMsgUsersGrid',
          'eqimmain.AddNewSendUserWin',
+         'eqimmain.EditSendUserWin',
          'eqimmain.SendMsgConfigGrid'
     ],
     models: [
@@ -51,15 +52,26 @@ Ext.define('EqimPrj.controller.EqimMain', {
             },
             'sendmsgconfiggrid button[action=add]':{
                 click: this.showAddNewSendWin
+            },'sendmsgconfiggrid button[action=del]':{
+                click: this.delsendmsgconfig
             },
             'sendmsgusersgrid button[action=add]':{
                 click: this.showAddNewSendUsersWin
+            },
+            'sendmsgusersgrid button[action=del]':{
+                click: this.delsenduser
+            },
+            'sendmsgusersgrid button[action=edit]':{
+                click: this.editsenduserwin
             },
             'sendmsgconfiggrid button[action=edit]':{
                 click: this.editsendmsgwin
             },
             'editsendmsgwin button[action=save]':{
                 click: this.savesendmsg
+            },
+            'editsenduserwin button[action=save]':{
+                click: this.savesenduser
             },
             'addnewsenduserwin button[action=add]':{
                 click: this.addnewsenduser
@@ -125,6 +137,20 @@ Ext.define('EqimPrj.controller.EqimMain', {
         this.newsenduserwin.show();
 
     },
+
+    editsenduserwin:function(btn){
+        var selectitem=btn.up('panel').getSelectionModel().getLastSelected();
+        if(!selectitem){
+            Ext.Msg.alert("提示信息", "请选中编辑项");
+            return;
+        }
+        if(!this.myeditsenduserwin)this.myeditsenduserwin= Ext.widget('editsenduserwin');
+        this.myeditsenduserwin.show();
+
+        var item=selectitem.data;
+        var form=this.myeditsenduserwin.down('form').getForm();
+        form.setValues(item);
+    },
     editsendmsgwin:function(btn){
 
         var selectitem=btn.up('panel').getSelectionModel().getLastSelected();
@@ -156,6 +182,22 @@ Ext.define('EqimPrj.controller.EqimMain', {
         var form = btn.up('form');
         CommonFunc.formSubmit(form,{},url,successFunc,failFunc,"正在提交。。。")
     },
+    savesenduser:function(btn){
+        var url='log/updateSendUserConfig';
+        var me=this;
+        var successFunc = function (form, action) {
+            var grid=me.userwin.down('grid');
+            var win=btn.up('window').close();
+
+            grid.getStore().load();
+            grid.getSelectionModel().deselectAll();
+        };
+        var failFunc = function (form, action) {
+            Ext.Msg.alert("提示信息",action.result.msg);
+        };
+        var form = btn.up('form');
+        CommonFunc.formSubmit(form,{},url,successFunc,failFunc,"正在提交。。。")
+    },
     savesendmsg:function(btn){
         var url='log/updateSendMsgConfig';
         var me=this;
@@ -171,6 +213,67 @@ Ext.define('EqimPrj.controller.EqimMain', {
         };
         var form = btn.up('form');
         CommonFunc.formSubmit(form,{},url,successFunc,failFunc,"正在提交。。。")
+    },
+    delsenduser:function(btns){
+        var me=this;
+        var selectitem=btns.up('panel').getSelectionModel().getLastSelected();
+        if(!selectitem){
+            Ext.Msg.alert("提示信息", "请选中编辑项");
+            return;
+        }
+        Ext.MessageBox.confirm('提示', '你确定删除所选项目?', function(btn){
+            if(btn=="yes"){
+                var url='log/delSendMsgUsers';
+
+                var successFunc = function (form, action) {
+                    var grid=btns.up('window').down('grid');
+                    grid.getStore().load();
+                    grid.getSelectionModel().deselectAll();
+                };
+                var failFunc = function (form, action) {
+                    Ext.Msg.alert("提示信息",action.result.msg);
+                };
+
+                var item={};
+                item.id=selectitem.data.id;
+                CommonFunc.ajaxSend(item, url, successFunc, failFunc, "post");
+            }else{
+                //this.close(false);
+            }
+        });
+
+    },
+    delsendmsgconfig:function(btn){
+        var me=this;
+        var selectitem=btn.up('panel').getSelectionModel().getLastSelected();
+        if(!selectitem){
+            Ext.Msg.alert("提示信息", "请选中编辑项");
+            return;
+        }
+        Ext.MessageBox.confirm('提示', '你确定删除所选项目?', function(btn){
+            if(btn=="yes"){
+                var url='log/delSendMsgConfig';
+
+                var successFunc = function (form, action) {
+                    var grid=me.configwin.down('grid');
+                    grid.getStore().load();
+                    grid.getSelectionModel().deselectAll();
+
+                };
+                var failFunc = function (form, action) {
+                    Ext.Msg.alert("提示信息",action.result.msg);
+                };
+
+                var item={};
+
+
+                item.id=selectitem.data.id;
+                CommonFunc.ajaxSend(item, url, successFunc, failFunc, "post");
+            }else{
+                //this.close(false);
+            }
+        });
+
     },
     savesendmsgconfig:function(btn){
         var grid=btn.up('window').down('grid');
@@ -259,8 +362,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
           +(data.lon>=0?"东经":"西经")+Math.abs(data.lon).toFixed(1)+"度）发生"+data.M+"级左右地震，最终结果以正式速报为准。";
       return content;
     },
-    sendTel:function(data,type){
-        console.log("TEL");
+    sendTelDetai:function(content){
         var url='log/sendtelmsg';
 
         var successFunc = function (form, action) {
@@ -272,8 +374,14 @@ Ext.define('EqimPrj.controller.EqimMain', {
 
         var item={};
 
-        item.content=this.contentFormat(data,type);
+        item.content=content;
         CommonFunc.ajaxSend(item, url, successFunc, failFunc, "post");
+
+    },
+    sendTel:function(data,type){
+        console.log("TEL");
+        var content=this.contentFormat(data,type);
+        this.sendTelDetai(content);
 
     },
     makelog:function(data,type){
@@ -296,24 +404,23 @@ Ext.define('EqimPrj.controller.EqimMain', {
         CommonFunc.ajaxSend(params, url, successFunc, failFunc, "post");
 
     },
-
-    sendWeb:function(data,type){
-        console.log("wangye");
+    sendWebDetai:function(content){
         var url='log/sendsoap';
-
         var successFunc = function (form, action) {
             Ext.Msg.alert("提示信息","网页发布成功");
         };
         var failFunc = function (form, action) {
             Ext.Msg.alert("提示信息","发布失败");
         };
-
-
         var item={};
-
+        item.url="http://www.zjdz.gov.cn/webservice/articleapi.asmx?op=QuickInsert";
+        item.content=content;
+        CommonFunc.ajaxSend(item, url, successFunc, failFunc, "post");
+    },
+    sendWeb:function(data,type){
+        console.log("wangye");
         content=this.contentFormat(data,type);
-
-        item.content='<?xml version="1.0" encoding="utf-8"?>'+
+        var itemcontent='<?xml version="1.0" encoding="utf-8"?>'+
             '<soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">'
              +'<soap12:Body>'
             /*+'<GetAllCatalogList xmlns="http://www.zjdz.gov.cn/">'
@@ -338,13 +445,12 @@ Ext.define('EqimPrj.controller.EqimMain', {
         //item.action="http://www.zjdz.gov.cn/GetAllCatalogList";
         //item.action="http://www.zjdz.gov.cn/QuickInsert";
         //item.url="http://www.zjdz.gov.cn/webservice/articleapi.asmx?op=GetAllCatalogList";
-        item.url="http://www.zjdz.gov.cn/webservice/articleapi.asmx?op=QuickInsert";
-        CommonFunc.ajaxSend(item, url, successFunc, failFunc, "post");
-
+        //item.url="http://www.zjdz.gov.cn/webservice/articleapi.asmx?op=QuickInsert";
+        //CommonFunc.ajaxSend(item, url, successFunc, failFunc, "post");
+        this.sendWebDetai(itemcontent);
 
     },
-    sendWeiBo:function(data,type){
-        console.log("weibo");
+    sendWeiBoDetai:function(content){
         var url='log/sendweibo';
 
         var successFunc = function (form, action) {
@@ -357,7 +463,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
         var item={};
         item.username=localStorage.weibousername;
         item.password=localStorage.weibopassword;
-        item.content=this.contentFormat(data,type);
+        item.content=content;
         item.content="#地震快讯#"+ item.content;
         if(item.password&&item.password){
             CommonFunc.ajaxSend(item, url, successFunc, failFunc, "post");
@@ -365,7 +471,11 @@ Ext.define('EqimPrj.controller.EqimMain', {
             Ext.Msg.alert("提示信息","微博发布失败,查看用户密码是否正确");
         }
 
-
+    },
+    sendWeiBo:function(data,type){
+        console.log("weibo");
+        var content=this.contentFormat(data,type);
+        this.sendWeiBoDetai(content);
     },
     sendMsg:function(data){
         console.log(data);
