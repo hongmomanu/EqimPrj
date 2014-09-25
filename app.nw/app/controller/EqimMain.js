@@ -309,39 +309,9 @@ Ext.define('EqimPrj.controller.EqimMain', {
         };
 
 
-        /*item.content='<?xml version="1.0" encoding="utf-8"?>'+
-            '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ' +
-            'xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">'
-            +'<soap:Body><GetAllCatalogList xmlns="http://www.zjdz.gov.cn/">'
-            +'<QuickInsert xmlns="http://www.zjdz.gov.cn/">'
-            +'<username>ZJDZ</username>'
-            +'<password>L9dP2kaB</password>'
-            +'<title>ceshishi</title>'
-            +'<cid>371</cid>'
-            +'<summary>string</summary>'
-            +'<content>'+content+'</content>'
-            +'<coordinate>'+data.lon+','+data.lat+'</coordinate>'
-            +'<published>'+data.time+'</published>'
-            +'</QuickInsert>'
-            +'</soap:Body>'
-            +'</soap:Envelope>';
-        item.url="http://www.zjdz.gov.cn/webservice/articleapi.asmx?op=QuickInsert";*/
-
-/*
- item.content='<?xml version="1.0" encoding="utf-8"?>'+
- '<soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">'
- +'<soap12:Body>'
- +'<GetAllCatalogList xmlns="http://www.zjdz.gov.cn/">'
- +'<username>ZJDZ</username>'
- +'<password>L9dP2kaB</password>'
- +'</GetAllCatalogList>'
- +'</soap12:Body>'
- +'</soap12:Envelope>';*/
-
-
         var item={};
 
-        //item.content=this.contentFormat(data,type);
+        content=this.contentFormat(data,type);
 
         item.content='<?xml version="1.0" encoding="utf-8"?>'+
             '<soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">'
@@ -349,21 +319,20 @@ Ext.define('EqimPrj.controller.EqimMain', {
             /*+'<GetAllCatalogList xmlns="http://www.zjdz.gov.cn/">'
             +'<username>ZJDZ</username>'
             +'<password>L9dP2kaB</password>'
-            +'</GetAllCatalogList>'*/
+                +'</GetAllCatalogList>'*/
             +'<QuickInsert xmlns="http://www.zjdz.gov.cn/">'
             +'<username>ZJDZ</username>'
             +'<password>L9dP2kaB</password>'
-            +'<title>ceshishi111111111111111111111</title>'
+            +'<title>'+content+'</title>'
             +'<cid>371</cid>'
             +'<summary></summary>'
-            +'<content>1212121212121212111111111</content>'
-            +'<preview>11</preview>'
-            +'<author>11</author>'
-            +'<source>11</source>'
-            +'<coordinate>122.321,32.3292</coordinate>'
-            +'<published>'+data.time+'</published>'
+            +'<content>'+content+'</content>'
+            +'<preview></preview>'
+            +'<author></author>'
+            +'<source></source>'
+            +'<coordinate>'+data.lon.toFixed(3)+','+data.lat.toFixed(3)+'</coordinate>'
+            +'<published>'+data.time.replace(" ","T")+'</published>'
             +'</QuickInsert>'
-
             +'</soap12:Body>'
             +'</soap12:Envelope>';
         //item.action="http://www.zjdz.gov.cn/GetAllCatalogList";
@@ -468,8 +437,9 @@ Ext.define('EqimPrj.controller.EqimMain', {
 
         if(!this.userwin){
             var win=Ext.create('Ext.window.Window', {
-                title: 'Hello',
+                title: '人员配置',
                 height: 200,
+                closeAction : 'hide',
                 width: 400,
                 layout: 'fit',
                 items: {  // Let's put an empty grid in just to illustrate fit layout
