@@ -188,7 +188,6 @@ Ext.define('EqimPrj.controller.EqimMain', {
         var successFunc = function (form, action) {
             var grid=me.userwin.down('grid');
             var win=btn.up('window').close();
-
             grid.getStore().load();
             grid.getSelectionModel().deselectAll();
         };
