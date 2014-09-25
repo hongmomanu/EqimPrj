@@ -63,7 +63,29 @@ Ext.define('EqimPrj.view.eqimmain.ConfigWin' ,{
                         }
 
                          ]
-                    },{
+                    },
+                    {
+                        xtype:'fieldset',
+                        flex:1,
+
+                        title: '网站接口',
+
+                        layout: 'anchor',
+                        defaults: {
+                            anchor: '100%'
+                        },
+                        items:[
+                            {
+                                xtype: 'textfield',
+                                fieldLabel: '地址',
+                                required:true,
+                                allowBlank:false,
+                                afterLabelTextTpl: required,
+                                name: 'websiteurl'
+                            }
+                        ]
+                    },
+                    {
                         xtype:'fieldset',
                         flex:3,
                         title: '发送条件',

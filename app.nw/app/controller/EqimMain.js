@@ -130,8 +130,12 @@ Ext.define('EqimPrj.controller.EqimMain', {
         }
         this.configwin.show();
         var form =this.configwin.down('form').getForm();
-
-        form.setValues({"weibousername":localStorage.weibousername,"weibopassword":localStorage.weibopassword});
+        if(!localStorage.websiteurl)localStorage.websiteurl='http://www.zjdz.gov.cn/webservice/articleapi.asmx?op=QuickInsert' ;
+        if(!localStorage.weibousername)localStorage.weibousername='liaolongshiwo@163.com';
+        if(!localStorage.weibopassword)localStorage.weibopassword='long090909';
+        form.setValues({"weibousername":localStorage.weibousername,
+            "weibopassword":localStorage.weibopassword,
+            "websiteurl":localStorage.websiteurl});
 
 
     },
@@ -188,7 +192,9 @@ Ext.define('EqimPrj.controller.EqimMain', {
                  me.sendTelDetai(form.getValues().content);
               }if(sendways.indexOf("1")>=0){
                   me.sendWeiBoDetai(form.getValues().content);
-              }/*if(sendways.indexOf("2")>=0){
+              }
+
+              /*if(sendways.indexOf("2")>=0){
                   me.sendWebDetai(form.getValues().content);
               }*/
           }
@@ -313,6 +319,8 @@ Ext.define('EqimPrj.controller.EqimMain', {
 
         localStorage.weibousername=form.getValues().weibousername;
         localStorage.weibopassword=form.getValues().weibopassword;
+        localStorage.websiteurl=form.getValues().websiteurl;
+
 
         var changed_data=store.getModifiedRecords();
         me.count=0;
@@ -359,6 +367,9 @@ Ext.define('EqimPrj.controller.EqimMain', {
        this.showMaplocation(record.data);
     },
     isplacein:function(location,epicenter){
+        if(!epicenter||epicenter.replace(/\s+/g,"")==""){
+            return true;
+        }
         var iscontain=false;
         var arrs=epicenter.split(",");
         for(var i=0;i<arrs.length;i++){
@@ -433,17 +444,23 @@ Ext.define('EqimPrj.controller.EqimMain', {
 
     },
     sendWebDetai:function(content){
-        var url='log/sendsoap';
-        var successFunc = function (form, action) {
-            Ext.Msg.alert("提示信息","网页发布成功");
-        };
-        var failFunc = function (form, action) {
-            Ext.Msg.alert("提示信息","发布失败");
-        };
-        var item={};
-        item.url="http://www.zjdz.gov.cn/webservice/articleapi.asmx?op=QuickInsert";
-        item.content=content;
-        CommonFunc.ajaxSend(item, url, successFunc, failFunc, "post");
+        if(localStorage.websiteurl){
+            var url='log/sendsoap';
+            var successFunc = function (form, action) {
+                Ext.Msg.alert("提示信息","网页发布成功");
+            };
+            var failFunc = function (form, action) {
+                Ext.Msg.alert("提示信息","发布失败");
+            };
+            var item={};
+            item.url=localStorage.websiteurl;
+            item.content=content;
+            CommonFunc.ajaxSend(item, url, successFunc, failFunc, "post");
+        }else{
+
+            Ext.Msg.alert("提示信息","网站发布失败，查看地址是否正确");
+        }
+
     },
     sendWeb:function(data,type){
         console.log("wangye");
@@ -466,7 +483,7 @@ Ext.define('EqimPrj.controller.EqimMain', {
             +'<author></author>'
             +'<source></source>'
             +'<coordinate>'+data.lon.toFixed(3)+','+data.lat.toFixed(3)+'</coordinate>'
-            +'<published>'+data.time.replace(" ","T")+'</published>'
+            +'<published>'+Ext.Date.format(new Date(),'Y-m-d H:i:s').replace(" ","T")+'</published>'
             +'</QuickInsert>'
             +'</soap12:Body>'
             +'</soap12:Envelope>';

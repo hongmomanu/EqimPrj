@@ -24,7 +24,9 @@ Ext.define('EqimPrj.view.eqimmain.EarthListGrid', {
                 {header: '详细信息',dataIndex: 'location',flex: 1,renderer : function(v,m,r) {
                     console.log(r);
                     testobj=r;
-                    var str='<ul><li>接收时间:'+r.get('stime')+'</li><li>来源:'+ r.get('cname')+'</li><li>发震时刻:'
+                    var str='<ul><li>接收时间:'+r.get('stime')+'</li><li>来源:'+ r.get('cname')
+                        +"("+r.get('code')+")"
+                        +'</li><li>发震时刻:'
                         +r.get('time')+'</li>' +
                         '<li>经纬度:'+ r.get('lon').toFixed(3)+','+ r.get('lat').toFixed(3)+'&nbsp;&nbsp;深度:'
                         + r.get('depth').toFixed(0)+'km</li>' +
@@ -42,6 +44,8 @@ Ext.define('EqimPrj.view.eqimmain.EarthListGrid', {
                 autoLoad: false,
                 fields: [
                     {name: 'location',
+                        type: 'string'},
+                    {name: 'code',
                         type: 'string'},
                     {name:'lat',
                         type: 'float'},

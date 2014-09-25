@@ -65,10 +65,10 @@ Ext.define('EqimPrj.view.eqimmain.AddNewSendMsgWin' ,{
                     {
                         xtype: 'textfield',
                         name: 'epicenter',
-                        required:true,
-                        allowBlank:false,
-                        afterLabelTextTpl: required,
-                        fieldLabel: '正中地区'
+                        //required:true,
+                        //allowBlank:false,
+                        //afterLabelTextTpl: required,
+                        fieldLabel: '震中地区'
                     },
                     {
                         xtype: 'combobox',
